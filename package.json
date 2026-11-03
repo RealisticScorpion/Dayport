@@ -1,0 +1,24 @@
+{
+  "name": "dayport",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Documentation and contributor tooling for the Dayport Chrome new tab dashboard.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RealisticScorpion/Dayport.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RealisticScorpion/Dayport/issues"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "check": "prettier --check .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}
