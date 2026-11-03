@@ -36,17 +36,17 @@ Direction: quiet typography. Dayport should feel like a well-set index page rath
 
 ### Typography
 
-Fonts are bundled with the extension; no remote font requests.
+Fonts are bundled with the extension; no remote font requests. Source Han Serif SC is large, so ship only the regular weight, subset to the characters the date and highlight styles need where practical, and fall back to Noto Serif CJK SC or Songti SC when it is unavailable. CJK serifs have no true italic, so highlights stay upright.
 
-| Role            | Family                                       | Size / line height | Notes                                      |
-| --------------- | -------------------------------------------- | ------------------ | ------------------------------------------ |
-| Date display    | Source Serif 4, falling back to system serif | 28 / 34            | The only serif in the chrome               |
-| Search input    | IBM Plex Sans                                | 17 / 24            |                                            |
-| Body, notes     | IBM Plex Sans                                | 14 / 22            |                                            |
-| Links           | IBM Plex Sans                                | 13 / row height    | Single line, ellipsis after about 18 chars |
-| Group headings  | IBM Plex Sans, medium                        | 12 / 16            | Secondary ink; no uppercase or tracking    |
-| Meta and clocks | IBM Plex Sans with tabular figures           | 12 / 16            | `font-variant-numeric: tabular-nums`       |
-| Highlights      | Source Serif 4, italic                       | 15 / 24            | Reading excerpts only                      |
+| Role            | Family                                           | Size / line height | Notes                                      |
+| --------------- | ------------------------------------------------ | ------------------ | ------------------------------------------ |
+| Date display    | Source Han Serif SC (思源宋体), regular          | 28 / 34            | The only serif in the chrome               |
+| Search input    | IBM Plex Sans                                    | 17 / 24            |                                            |
+| Body, notes     | IBM Plex Sans                                    | 14 / 22            |                                            |
+| Links           | IBM Plex Sans                                    | 13 / row height    | Single line, ellipsis after about 18 chars |
+| Group headings  | IBM Plex Sans, medium                            | 12 / 16            | Secondary ink; no uppercase or tracking    |
+| Meta and clocks | IBM Plex Sans with tabular figures               | 12 / 16            | `font-variant-numeric: tabular-nums`       |
+| Highlights      | Source Han Serif SC (思源宋体), regular, upright | 15 / 24            | Reading excerpts only                      |
 
 Chinese text falls back to system CJK fonts (PingFang SC, Microsoft YaHei, Noto Sans CJK SC). Headings avoid uppercase and letter spacing so they behave the same in Chinese and English.
 
