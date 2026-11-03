@@ -1,5 +1,7 @@
 // Captures 1280×800 Chrome Web Store screenshots with synthetic data.
-// Usage: npm run build && node scripts/store-screenshots.mjs [en|zh-CN]
+// Usage: npm run build:e2e && node scripts/store-screenshots.mjs [en|zh-CN]
+// The e2e build has the optional permissions granted, so frequent pages show;
+// their contents are stubbed so no real browsing data appears.
 import { chromium } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, realpathSync } from "node:fs";
@@ -8,7 +10,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const extensionPath = realpathSync(join(root, ".output/chrome-mv3"));
+const extensionPath = realpathSync(join(root, ".output-e2e/chrome-mv3"));
 const extensionId = createHash("sha256")
   .update(extensionPath)
   .digest("hex")
@@ -120,6 +122,27 @@ const groups =
         },
       ];
 
+const topSites =
+  language === "zh-CN"
+    ? [
+        { url: "https://www.zhihu.com/", title: "知乎" },
+        { url: "https://docs.python.org/3/library/", title: "Python 标准库" },
+        { url: "https://docs.python.org/3/tutorial/", title: "Python 教程" },
+        { url: "https://www.yuque.com/", title: "语雀" },
+        { url: "https://mail.qq.com/", title: "QQ 邮箱" },
+      ]
+    : [
+        { url: "https://mail.google.com/", title: "Gmail" },
+        { url: "https://docs.python.org/3/library/", title: "Python Library Reference" },
+        { url: "https://docs.python.org/3/tutorial/", title: "Python Tutorial" },
+        { url: "https://calendar.google.com/", title: "Calendar" },
+        { url: "https://stackoverflow.com/", title: "Stack Overflow" },
+      ];
+const laterTitles =
+  language === "zh-CN"
+    ? ["一篇关于排版的长文", "季度计划草稿", "发布检查清单", "竞品调研笔记"]
+    : ["A long read on typography", "Quarterly plan draft", "Release checklist", "Research notes"];
+
 const context = await chromium.launchPersistentContext(
   mkdtempSync(join(tmpdir(), "dayport-shots-")),
   {
@@ -134,14 +157,36 @@ const context = await chromium.launchPersistentContext(
     ],
   },
 );
+await context.addInitScript((sites) => {
+  if (!globalThis.chrome?.topSites) return;
+  chrome.topSites.get = async () => sites;
+  chrome.history.search = async () => [];
+}, topSites);
 const page = await context.newPage();
 const url = `chrome-extension://${extensionId}/newtab.html`;
 await page.goto(url);
 
 async function seed(settings) {
   await page.evaluate(
-    async ({ groups, settings }) => {
+    async ({ groups, settings, laterTitles }) => {
+      const now = Date.now();
+      const item = (title, i, ago, batch) => ({
+        id: `l${i}`,
+        url: `https://example.com/${i}`,
+        title,
+        savedAt: now - ago,
+        batch,
+      });
       await chrome.storage.local.set({
+        "dayport-later": {
+          version: 1,
+          items: [
+            item(laterTitles[0], 0, 2 * 3600e3, "a"),
+            item(laterTitles[1], 1, 2 * 86400e3, "b"),
+            item(laterTitles[2], 2, 2 * 86400e3, "b"),
+            item(laterTitles[3], 3, 2 * 86400e3, "b"),
+          ],
+        },
         dayport: {
           version: 1,
           updatedAt: Date.now(),
@@ -158,7 +203,7 @@ async function seed(settings) {
         },
       });
     },
-    { groups, settings },
+    { groups, settings, laterTitles },
   );
   await page.reload();
   await page.waitForTimeout(800);

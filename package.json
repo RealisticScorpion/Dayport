@@ -1,6 +1,6 @@
 {
   "name": "dayport",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "A local-first Chrome new tab page for dense navigation, useful widgets, and fewer open tabs.",

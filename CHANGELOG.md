@@ -4,6 +4,10 @@ Notable project changes will be recorded here.
 
 ## Unreleased
 
+## 0.2.0 — 2026-11-04
+
+Milestone 2: rediscover and continue.
+
 ### Added
 
 - Frequent pages from Chrome's top sites, with optional local history analysis for pages revisited on three or more days in two weeks. Pages group by domain; pin to a group, dismiss, or exclude a domain, each with Undo.
@@ -24,7 +28,7 @@ Notable project changes will be recorded here.
 
 ## 0.1.0 — 2026-11-03
 
-First preview release, submitted to the Chrome Web Store for review.
+First preview release, published on the Chrome Web Store.
 
 ### Added
 
