@@ -11,7 +11,7 @@ A local-first Chrome new tab dashboard for dense navigation, useful widgets, and
 
 ## Project status
 
-**Milestone 1 (navigation loop) implemented; preview not yet published.** The extension runs from source in Chrome 120 or newer: grouped links with editing and reordering, keyboard search, settings, and versioned backup import and export. Everything else in the table below is planned. See the [roadmap](docs/roadmap.md) for status.
+**Preview 0.1.0 released ([GitHub release](https://github.com/RealisticScorpion/Dayport/releases/tag/v0.1.0)); Chrome Web Store listing is under review.** The extension runs from the release package or from source in Chrome 120 or newer: grouped links with editing and reordering, keyboard search, settings, and versioned backup import and export. Everything else in the table below is planned. See the [roadmap](docs/roadmap.md) for status.
 
 ## What Dayport is for
 
