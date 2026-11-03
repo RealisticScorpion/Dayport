@@ -6,7 +6,13 @@ import { ErrorIcon, SettingsIcon } from "../../app/icons";
 import { ToastProvider, useToast } from "../../app/Toasts";
 import { useDayport, type DayportStore } from "../../app/useDayport";
 import { addGroup, newId } from "../../data/ops";
+import { useStored } from "../../app/useStored";
+import { laterCodec } from "../../data/later";
+import { KEYS } from "../../data/storage";
+import { ContinueLater } from "./ContinueLater";
+import { Frequent } from "./Frequent";
 import { Navigation } from "./Navigation";
+import { RecentlyClosed } from "./RecentlyClosed";
 import { SearchBox } from "./SearchBox";
 import { SettingsDrawer } from "./SettingsDrawer";
 
@@ -28,7 +34,9 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
   const [addingGroupId, setAddingGroupId] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
+  const later = useStored(KEYS.later, laterCodec);
   const { data, status, apply, retry } = store;
+  const settings = data?.settings;
   const singleKey = data?.settings.singleKeyShortcuts ?? true;
 
   // A failed write keeps the change on screen and offers a retry.
@@ -113,7 +121,12 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
           </p>
         )}
 
-        <SearchBox ref={searchRef} groups={data?.groups ?? []} showSlashHint={singleKey} />
+        <SearchBox
+          ref={searchRef}
+          groups={data?.groups ?? []}
+          later={settings?.showLater === false ? [] : (later.value ?? [])}
+          showSlashHint={singleKey}
+        />
 
         {data && (
           <div className="workspace" data-empty-space="true">
@@ -124,6 +137,17 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
                 <div className="actions">
                   <button type="button" className="btn btn-primary btn-lg" onClick={startFirstLink}>
                     {t("firstRunAdd")}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-lg"
+                    onClick={() =>
+                      void browser.tabs.create({
+                        url: browser.runtime.getURL("/options.html#bookmarks"),
+                      })
+                    }
+                  >
+                    {t("firstRunImport")}
                   </button>
                   <button
                     type="button"
@@ -144,11 +168,18 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
                 setAddingGroupId={setAddingGroupId}
               />
             )}
+            {(data.settings.showFrequent || data.settings.showLater) && (
+              <div className="auto-sections" data-empty-space="true">
+                {data.settings.showFrequent && <Frequent data={data} apply={guardedApply} />}
+                {data.settings.showLater && <ContinueLater />}
+              </div>
+            )}
           </div>
         )}
       </div>
       <footer className="footer" data-empty-space="true">
-        {t("localOnly")}
+        {settings?.showClosed && <RecentlyClosed />}
+        <span>{t("localOnly")}</span>
       </footer>
       {settingsOpen && data && (
         <SettingsDrawer

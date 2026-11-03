@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-**预览版 0.1.0 已发布（[GitHub Release](https://github.com/RealisticScorpion/Dayport/releases/tag/v0.1.0)），Chrome 应用商店上架审核中。** 扩展可从发布包或源码安装到 Chrome 120 及以上版本：分组链接的编辑与排序、键盘搜索、设置，以及带版本号的备份导入导出。下表其余功能仍在计划中，进度见[路线图](docs/roadmap.md)。
+**预览版 0.1.0 已发布（[GitHub Release](https://github.com/RealisticScorpion/Dayport/releases/tag/v0.1.0)），Chrome 应用商店上架审核中。** 扩展可从发布包或源码安装到 Chrome 120 及以上版本：分组链接的编辑与排序、键盘搜索、设置，以及带版本号的备份导入导出。里程碑 2（常去推荐、书签导入、稍后继续、最近关闭）已在 `main` 分支完成，尚未发布。下表其余功能仍在计划中，进度见[路线图](docs/roadmap.md)。
 
 ## 想解决的问题
 
@@ -54,7 +54,7 @@ npm run build
 
 然后在 Chrome 中加载：打开 `chrome://extensions`，开启**开发者模式**，点击**加载已解压的扩展程序**，选择 `.output/chrome-mv3` 目录。之后打开新标签页即可使用。
 
-常用命令：`npm run dev`（开发模式）、`npm run typecheck`、`npm test`（单元测试）、`npm run test:e2e`（浏览器端到端测试，需先 `npm run build` 和 `npx playwright install chromium`）、`npm run zip`（打包商店上传文件）、`npm run check`（格式检查）。
+常用命令：`npm run dev`（开发模式）、`npm run typecheck`、`npm test`（单元测试）、`npm run test:e2e`（构建测试版本并运行浏览器端到端测试，需先 `npx playwright install chromium`）、`npm run zip`（打包商店上传文件）、`npm run check`（格式检查）。
 
 ## 项目规范
 

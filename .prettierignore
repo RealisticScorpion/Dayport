@@ -3,6 +3,7 @@ dist/
 coverage/
 package-lock.json
 .output/
+.output-e2e/
 .wxt/
 test-results/
 playwright-report/

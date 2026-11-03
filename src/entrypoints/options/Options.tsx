@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppearance } from "../../app/appearance";
 import { I18nContext, useI18n } from "../../app/i18n";
 import { ErrorIcon } from "../../app/icons";
@@ -13,10 +13,18 @@ import {
   type ParsedBackup,
 } from "../../data/backup";
 import { emptyData, type DayportData } from "../../data/schema";
+import { BookmarksCard, ExcludedCard, PermissionsCard } from "./Discovery";
 
 export function Options() {
   const store = useDayport();
   const i18n = useAppearance(store.data?.settings);
+  const ready = store.data !== null;
+
+  // Links such as options.html#bookmarks scroll to their card once it exists.
+  useEffect(() => {
+    if (ready && location.hash) document.querySelector(location.hash)?.scrollIntoView();
+  }, [ready]);
+
   return (
     <I18nContext.Provider value={i18n}>
       <div className="options">
@@ -31,8 +39,11 @@ export function Options() {
           <>
             <ExportCard data={store.data} />
             <ImportCard data={store.data} apply={store.apply} />
+            <BookmarksCard data={store.data} apply={store.apply} />
           </>
         )}
+        <PermissionsCard />
+        <ExcludedCard />
         {store.status !== "loading" && (
           <ResetCard apply={store.apply} unreadable={store.status === "unreadable"} />
         )}

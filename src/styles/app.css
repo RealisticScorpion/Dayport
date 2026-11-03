@@ -149,6 +149,11 @@ select {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 clamp(16px, 4.5vw, 64px) 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
   font-size: 12px;
   line-height: 16px;
   color: var(--ink-faint);
@@ -553,6 +558,192 @@ a.row:hover,
 :root[data-favicons="quiet"] .result[aria-selected="true"] .favicon {
   filter: none;
   opacity: 1;
+}
+
+/* Automatic sections: frequent pages and continue later */
+.auto-sections {
+  flex: 1 1 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: 32px 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+}
+.auto-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.tag {
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: var(--hairline);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+.suggestions,
+.suggestions ul,
+.closed-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.suggestion {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.suggestion > .row {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: var(--ink-muted);
+}
+.suggestion.nested > .row {
+  padding-left: 34px;
+}
+.suggestion > .row:hover,
+.suggestion > .row:focus-visible {
+  color: var(--ink);
+}
+.host {
+  flex: none;
+  margin-left: auto;
+  padding-left: 8px;
+}
+.row-toggle {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.row-toggle:hover {
+  background: var(--surface);
+}
+.row-toggle .chevron {
+  flex: none;
+  color: var(--ink-faint);
+  transition: transform 140ms ease-out;
+}
+.row-toggle[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+.row-toggle .host {
+  margin-left: auto;
+}
+.stack {
+  flex: none;
+  display: flex;
+}
+.stack .favicon + .favicon {
+  margin-left: -6px;
+  box-shadow: 0 0 0 2px var(--ground);
+}
+/* Row actions appear on hover or keyboard focus, over the end of the row. */
+.row-actions {
+  position: absolute;
+  right: -4px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-left: 16px;
+  background: linear-gradient(to right, transparent, var(--surface) 14px);
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+.suggestion:hover > .row-actions,
+.suggestion:focus-within > .row-actions {
+  opacity: 1;
+}
+.suggestion:hover > .row,
+.suggestion:focus-within > .row {
+  background: var(--surface);
+}
+.empty-line {
+  margin: 0;
+}
+.permission-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+.permission-row p {
+  flex: 1 1 260px;
+  margin: 0;
+}
+.permission-actions {
+  display: flex;
+  gap: 2px;
+  margin-left: -8px;
+}
+.menu-root {
+  position: relative;
+}
+.menu {
+  position: absolute;
+  z-index: 6;
+  top: 32px;
+  right: 0;
+  min-width: 180px;
+  max-width: 280px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+}
+.menu-heading {
+  margin: 4px 8px 6px;
+}
+.menu-item {
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  text-align: left;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+.menu-item:hover,
+.menu-item:focus-visible {
+  background: var(--ground);
+  outline: none;
+}
+.footer-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+.footer-button:hover {
+  color: var(--ink);
+}
+.closed-row {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.closed-row:hover {
+  background: var(--ground);
 }
 
 /* First run */

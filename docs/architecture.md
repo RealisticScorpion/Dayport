@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: Milestone 1 is implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
+Status: Milestones 1 and 2 are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
 
 ## Target
 
@@ -21,14 +21,16 @@ Keep feature rules with their feature. Introduce a shared interface only when th
 
 ## Code layout
 
-| Path                       | Contents                                                                  |
-| -------------------------- | ------------------------------------------------------------------------- |
-| `src/data/`                | Schema, pure edit operations, search, migration, backup import and export |
-| `src/app/`                 | Shared UI: storage hook, appearance, translations, toasts, icons          |
-| `src/entrypoints/newtab/`  | The new tab page                                                          |
-| `src/entrypoints/options/` | The options page (data import, export, reset, privacy)                    |
-| `e2e/`                     | Playwright tests that load the built extension                            |
-| `scripts/`                 | Font CSS, icon, and store screenshot generators                           |
+| Path                            | Contents                                                                                                        |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `src/data/`                     | Schema, pure edit operations, search, migration, backup and bookmark import, suggestion ranking, continue later |
+| `src/app/`                      | Shared UI: storage hooks, permissions, browser data readers, appearance, translations, toasts, menus, drawers   |
+| `src/entrypoints/newtab/`       | The new tab page                                                                                                |
+| `src/entrypoints/popup/`        | Toolbar popup that saves tabs to Continue later                                                                 |
+| `src/entrypoints/background.ts` | Page context menu "Continue later"                                                                              |
+| `src/entrypoints/options/`      | The options page (data, bookmark import, permissions, excluded domains, privacy)                                |
+| `e2e/`                          | Playwright tests that load the e2e build of the extension                                                       |
+| `scripts/`                      | Font CSS, icon, and store screenshot generators                                                                 |
 
 ## Data model
 
@@ -44,7 +46,16 @@ Settings = { theme, density, favicons, timeTint, language, singleKeyShortcuts }
 - Every edit is a pure function in `src/data/ops.ts`. The page renders the result first and then writes the whole document; writes are serialized so an older write never lands after a newer one. A failed write keeps the change on screen and shows a Retry action.
 - Other open pages receive changes through `storage.onChanged` and adopt the newer document.
 - Unknown or damaged documents are never overwritten automatically. Valid groups are kept, missing settings fall back to defaults per field, and unreadable data shows an error with a reset path on the options page.
-- Backups use `{ format: "dayport-backup", version, exportedAt, groups?, settings? }`. Imports validate every link, skip unsafe or malformed entries with a reason, regenerate ids, and change nothing until the user confirms merge or replace.
+- Backups use `{ format: "dayport-backup", version, exportedAt, groups?, settings? }`. Imports validate every link, skip unsafe or malformed entries with a reason, regenerate ids, and change nothing until the user confirms merge or replace. Bookmark import builds the same parsed shape from chosen folders and reuses preview and merge.
+
+Two smaller collections have their own keys, because the toolbar popup and the background worker write them too:
+
+```ts
+"dayport-later":     { version: 1, items: { id, url, title, savedAt, batch }[] }   // tabs saved together share `batch`
+"dayport-discovery": { version: 1, dismissed: string[], excluded: string[] }      // urlKeys and domains
+```
+
+Every write to these keys re-reads storage and applies a pure edit (`mutateKey` in `src/data/storage.ts`), so no context writes back a stale copy over another's save. Damaged items are dropped individually. Frequent-page suggestions are never stored: each page load rebuilds them from top sites and, if enabled, history, then removes pinned, dismissed, and excluded pages (`src/data/discovery.ts`). Pins therefore never change when Chrome's lists do.
 
 ## Storage and updates
 
@@ -59,21 +70,24 @@ Settings = { theme, density, favicons, timeTint, language, singleKeyShortcuts }
 
 ## Browser API boundaries
 
-| Capability            | Candidate API                         | Permission strategy                                                    |
-| --------------------- | ------------------------------------- | ---------------------------------------------------------------------- |
-| New tab replacement   | `chrome_url_overrides.newtab`         | Declare the bundled extension page                                     |
-| Persistent settings   | `chrome.storage`                      | `storage`, required (implemented)                                      |
-| Site icons            | `chrome://favicon` cache (`_favicon`) | `favicon`, required (implemented); no remote requests                  |
-| Web search            | `chrome.search`                       | Planned with web search mode                                           |
-| Frequent destinations | `chrome.topSites`                     | Optional on enabling automatic suggestions                             |
-| Enhanced discovery    | `chrome.history`                      | Optional and separately explained                                      |
-| Bookmark import       | `chrome.bookmarks`                    | Optional on import                                                     |
-| Recently closed       | `chrome.sessions`                     | Optional on enabling the widget                                        |
-| Selected tab saving   | `chrome.tabs`                         | Optional; listing a window's tabs needs `tabs`, requested on first use |
-| Scheduled updates     | `chrome.alarms`                       | Add when scheduled work exists                                         |
-| Remote providers      | Origin-scoped host permissions        | Request only enabled provider origins                                  |
+| Capability            | Candidate API                         | Permission strategy                                              |
+| --------------------- | ------------------------------------- | ---------------------------------------------------------------- |
+| New tab replacement   | `chrome_url_overrides.newtab`         | Declare the bundled extension page                               |
+| Persistent settings   | `chrome.storage`                      | `storage`, required (implemented)                                |
+| Site icons            | `chrome://favicon` cache (`_favicon`) | `favicon`, required (implemented); no remote requests            |
+| Web search            | `chrome.search`                       | Planned with web search mode                                     |
+| Frequent destinations | `chrome.topSites`                     | `topSites`, optional, requested by Enable (implemented)          |
+| Enhanced discovery    | `chrome.history`                      | `history`, optional, requested separately (implemented)          |
+| Bookmark import       | `chrome.bookmarks`                    | `bookmarks`, optional, requested on import (implemented)         |
+| Recently closed       | `chrome.sessions`                     | `sessions` + `tabs`, optional, requested by Enable (implemented) |
+| Save the current tab  | `activeTab`, `contextMenus`           | Required, no install warning (implemented)                       |
+| Choose other tabs     | `chrome.tabs`                         | `tabs`, optional, requested from the popup (implemented)         |
+| Scheduled updates     | `chrome.alarms`                       | Add when scheduled work exists                                   |
+| Remote providers      | Origin-scoped host permissions        | Request only enabled provider origins                            |
 
 The table is a plan, not an existing manifest or a claim that all listed permissions are necessary. Keep permissions absent until the corresponding capability exists.
+
+Optional permissions are requested only from a click. The end-to-end build (`npm run build:e2e`, output in `.output-e2e/`) declares them as required because tests cannot answer Chrome's prompt; the refusal path is tested by stubbing the permissions API.
 
 ## Security and privacy
 

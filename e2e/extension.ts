@@ -4,11 +4,12 @@ import { existsSync, mkdtempSync, realpathSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-export const extensionPath = realpathSync(join(import.meta.dirname, "../.output/chrome-mv3"));
-
-if (!existsSync(join(extensionPath, "manifest.json"))) {
-  throw new Error("Build the extension first: npm run build");
+// The e2e build (npm run build:e2e) grants the optional permissions up front.
+const buildPath = join(import.meta.dirname, "../.output-e2e/chrome-mv3");
+if (!existsSync(join(buildPath, "manifest.json"))) {
+  throw new Error("Build the extension first: npm run build:e2e");
 }
+export const extensionPath = realpathSync(buildPath);
 
 /** Chrome derives an unpacked extension's id from the SHA-256 of its absolute path. */
 export const extensionId = createHash("sha256")
@@ -19,6 +20,7 @@ export const extensionId = createHash("sha256")
 
 export const newTabUrl = `chrome-extension://${extensionId}/newtab.html`;
 export const optionsUrl = `chrome-extension://${extensionId}/options.html`;
+export const popupUrl = `chrome-extension://${extensionId}/popup.html`;
 
 export function newProfileDir(): string {
   return mkdtempSync(join(tmpdir(), "dayport-e2e-"));

@@ -55,6 +55,9 @@ Source of truth for the Chrome Web Store submission. Update it with each release
 - **Permission justification:**
   - `storage`: Saves the user's link groups and settings locally in `chrome.storage.local`.
   - `favicon`: Shows each saved site's icon from Chrome's local favicon cache instead of requesting icons from a remote service.
+  - `activeTab` (from 0.2.0): Lets the toolbar button and the "Continue later" page menu read the address and title of the tab they were used on, so the user can save it.
+  - `contextMenus` (from 0.2.0): Adds the "Continue later" item to the page context menu.
+  - Optional, requested only when the user enables the feature (from 0.2.0): `topSites` (frequent pages), `history` (pages revisited on several days, analyzed on the device), `bookmarks` (bookmark folder import), `sessions` and `tabs` (recently closed tabs and the titles of tabs the user chooses to save).
   - New tab override (`chrome_url_overrides.newtab`): The extension's single purpose is the new tab page.
 - **Remote code:** No. All JavaScript, CSS, and fonts are bundled in the package.
 - **Data usage:** The extension does not collect or transmit any user data. Leave every data type unchecked and certify the three disclosures (not sold, not used for unrelated purposes, not used for creditworthiness).

@@ -22,13 +22,13 @@ Acceptance (automated in `e2e/navigation.spec.ts`): create a group, save a link,
 
 ## Milestone 2: rediscover and continue
 
-- [ ] Optional browser top sites and bookmark import
-- [ ] Optional local history-based discovery of recurring pages
-- [ ] Pin, dismiss, exclude-domain, and domain-grouping behavior
-- [ ] Save selected tab URLs and offer closing only after durable storage
-- [ ] Recently closed list and restore actions
+- [x] Optional browser top sites and bookmark import
+- [x] Optional local history-based discovery of recurring pages
+- [x] Pin, dismiss, exclude-domain, and domain-grouping behavior
+- [x] Save selected tab URLs and offer closing only after durable storage
+- [x] Recently closed list and restore actions
 
-Acceptance: permission refusal leaves manual navigation usable; exclusions persist; automatic updates preserve pins; a failed save never closes tabs.
+Acceptance (automated in `e2e/rediscover.spec.ts`): permission refusal leaves manual navigation usable; exclusions persist; automatic updates preserve pins; a failed save never closes tabs.
 
 ## Milestone 3: backgrounds and daily tools
 

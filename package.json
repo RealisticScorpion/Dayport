@@ -22,7 +22,8 @@
     "prepare": "wxt prepare",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "build:e2e": "DAYPORT_E2E=1 wxt build",
+    "test:e2e": "npm run build:e2e && playwright test",
     "check": "prettier --check .",
     "format": "prettier --write ."
   },
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",
+    "@types/node": "22.20.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "@wxt-dev/module-react": "1.2.2",

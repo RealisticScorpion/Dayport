@@ -1,0 +1,48 @@
+body {
+  width: 360px;
+  background: var(--surface);
+}
+.popup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+}
+.popup-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+.popup-title svg {
+  color: var(--accent);
+}
+.popup-list {
+  max-height: 340px;
+  overflow-y: auto;
+  margin: 0 -8px;
+  padding: 0;
+  list-style: none;
+}
+.popup-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 32px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+label.popup-tab:hover {
+  background: var(--ground);
+}
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

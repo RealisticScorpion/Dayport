@@ -200,6 +200,8 @@ The new tab page cannot select other tabs, so saving starts from the toolbar pop
 
 On the new tab page, Continue later shows the 6 most recent entries with their saved date and "All N" to open the full list. Tabs saved together appear as one group row with a count that expands. Row actions are **Open**, which opens the tab and removes the entry with Undo, and **Remove**.
 
+Without the optional `tabs` permission the popup sees only the tab its button was clicked on; "Choose other tabs in this window" requests `tabs` and then lists the rest. Pages that can never be saved, such as new tab pages, are not listed. The page context menu saves the current page in one step and marks the toolbar button with ✓ (or ! on failure) for three seconds; it never offers to close the tab.
+
 Recently closed tabs and windows come from `chrome.sessions` and appear in the footer drawer once that permission is enabled. A closed window appears as "Window · 5 tabs" and restores as a whole.
 
 ## Data portability

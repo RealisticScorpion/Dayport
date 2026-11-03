@@ -1,6 +1,8 @@
 # Privacy design
 
-Status: design intent plus the behavior of the current Milestone 1 build. This is not a certification. Milestone 1 stores links and settings in `chrome.storage.local`, requests only the `storage` and `favicon` permissions, bundles its fonts, and makes no network requests of its own; opening a saved link is ordinary navigation.
+Status: design intent plus the behavior of the current build (Milestones 1 and 2). This is not a certification. Dayport stores links, settings, tabs saved for later, and suggestion preferences in `chrome.storage.local`, bundles its fonts, and makes no network requests of its own; opening a saved link is ordinary navigation.
+
+Required permissions are `storage`, `favicon`, `activeTab` (the toolbar button and page menu save the tab they were used on), and `contextMenus`. Top sites, history, bookmarks, sessions, and tabs are optional: each is requested only when the user enables the feature that needs it, read on this device only, and can be revoked on the options page. History is analyzed in the page to find recurring visits; neither raw history nor the analysis is stored. Revoking a permission stops future reads; links already pinned or saved for later stay until the user removes them.
 
 ## Local by default
 

@@ -26,6 +26,10 @@ export const SettingsSchema = z.object({
   timeTint: z.boolean(),
   language: z.enum(["auto", "en", "zh-CN"]),
   singleKeyShortcuts: z.boolean(),
+  /** Sections that can be hidden from the new tab page. */
+  showFrequent: z.boolean(),
+  showLater: z.boolean(),
+  showClosed: z.boolean(),
 });
 
 export const DataSchema = z.object({
@@ -47,6 +51,9 @@ export const DEFAULT_SETTINGS: Settings = {
   timeTint: true,
   language: "auto",
   singleKeyShortcuts: true,
+  showFrequent: true,
+  showLater: true,
+  showClosed: true,
 };
 
 export function emptyData(now = Date.now()): DayportData {

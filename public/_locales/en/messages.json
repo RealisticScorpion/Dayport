@@ -4,5 +4,11 @@
   },
   "extDescription": {
     "message": "A quiet, local-first new tab page for your everyday links. Fast keyboard search, no account, no tracking."
+  },
+  "menuContinueLater": {
+    "message": "Continue later"
+  },
+  "actionTitle": {
+    "message": "Save tabs to continue later"
   }
 }

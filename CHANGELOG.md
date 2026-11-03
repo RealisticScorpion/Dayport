@@ -4,6 +4,24 @@ Notable project changes will be recorded here.
 
 ## Unreleased
 
+### Added
+
+- Frequent pages from Chrome's top sites, with optional local history analysis for pages revisited on three or more days in two weeks. Pages group by domain; pin to a group, dismiss, or exclude a domain, each with Undo.
+- Continue later: a toolbar popup saves chosen tabs and offers to close them only after the save is confirmed; a page context menu saves the current page. Saved tabs appear on the new tab page, grouped by save, and in search.
+- Recently closed tabs and windows in a footer drawer, restorable in one click.
+- Bookmark import on the options page: chosen folders become groups, previewed and merged without duplicates.
+- Options page sections for optional permissions (enable or revoke) and excluded domains.
+- Settings to hide the frequent, continue later, and recently closed sections.
+
+### Changed
+
+- Required permissions add `activeTab` and `contextMenus`; `topSites`, `history`, `bookmarks`, `sessions`, and `tabs` are optional and requested only when a feature is enabled.
+- End-to-end tests run against a separate build (`npm run build:e2e`) that grants optional permissions up front.
+
+### Fixed
+
+- Esc closes drawers even after the focused control inside them disappears.
+
 ## 0.1.0 — 2026-11-03
 
 First preview release, submitted to the Chrome Web Store for review.

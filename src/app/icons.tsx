@@ -64,3 +64,29 @@ export const TrashIcon = () => (
     <path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" />
   </svg>
 );
+
+export const PinIcon = () => (
+  <svg {...base} width={14} height={14}>
+    <path d="M9 4h6l-1 6 3 3H7l3-3zM12 13v7" />
+  </svg>
+);
+
+export const MoreIcon = () => (
+  <svg {...base} fill="currentColor" stroke="none" width={14} height={14}>
+    <circle cx="5" cy="12" r="1.6" />
+    <circle cx="12" cy="12" r="1.6" />
+    <circle cx="19" cy="12" r="1.6" />
+  </svg>
+);
+
+export const ChevronIcon = () => (
+  <svg {...base} width={14} height={14} className="chevron">
+    <path d="m9 6 6 6-6 6" />
+  </svg>
+);
+
+export const CheckIcon = () => (
+  <svg {...base} width={14} height={14}>
+    <path d="m5 12 5 5 9-10" />
+  </svg>
+);
