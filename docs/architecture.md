@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: Milestones 1 and 2 are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
+Status: Milestones 1, 2, and 3a are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
 
 ## Target
 
@@ -53,7 +53,10 @@ Two smaller collections have their own keys, because the toolbar popup and the b
 ```ts
 "dayport-later":     { version: 1, items: { id, url, title, savedAt, batch }[] }   // tabs saved together share `batch`
 "dayport-discovery": { version: 1, dismissed: string[], excluded: string[] }      // urlKeys and domains
+"dayport-note":      { version: 1, text, updatedAt, writer }                       // one note; writer = page id
 ```
+
+The note is saved whole, 600 ms after typing stops and when the page hides. A page ignores its own writes by `writer`; a write from another page replaces the text if this page has no unsaved typing, and otherwise shows "Load latest / Keep mine" and pauses autosave. Settings also hold up to 8 clocks as `{ id, zone, label }` with IANA zone names; offsets and dates come from `Intl`, never from stored offsets.
 
 Every write to these keys re-reads storage and applies a pure edit (`mutateKey` in `src/data/storage.ts`), so no context writes back a stale copy over another's save. Damaged items are dropped individually. Frequent-page suggestions are never stored: each page load rebuilds them from top sites and, if enabled, history, then removes pinned, dismissed, and excluded pages (`src/data/discovery.ts`). Pins therefore never change when Chrome's lists do.
 
@@ -75,7 +78,7 @@ Every write to these keys re-reads storage and applies a pure edit (`mutateKey` 
 | New tab replacement   | `chrome_url_overrides.newtab`         | Declare the bundled extension page                               |
 | Persistent settings   | `chrome.storage`                      | `storage`, required (implemented)                                |
 | Site icons            | `chrome://favicon` cache (`_favicon`) | `favicon`, required (implemented); no remote requests            |
-| Web search            | `chrome.search`                       | Planned with web search mode                                     |
+| Web search            | `chrome.search`                       | `search`, required, no install warning (implemented)             |
 | Frequent destinations | `chrome.topSites`                     | `topSites`, optional, requested by Enable (implemented)          |
 | Enhanced discovery    | `chrome.history`                      | `history`, optional, requested separately (implemented)          |
 | Bookmark import       | `chrome.bookmarks`                    | `bookmarks`, optional, requested on import (implemented)         |

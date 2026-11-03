@@ -177,6 +177,7 @@ describe("backup import", () => {
       links: 3,
       duplicateLinks: 1,
       hasSettings: true,
+      hasNote: false,
     });
     const merged = mergeImport(current, incoming);
     expect(merged.groups.map((g) => g.name)).toEqual(["Work", "Docs", "New"]);

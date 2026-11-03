@@ -57,7 +57,7 @@ test("refusing permissions leaves manual navigation usable", async () => {
   // Manual navigation still works.
   await page.getByRole("button", { name: "Add a link" }).click();
   await page.getByPlaceholder("URL · github.com").fill("example.com");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Done" }).click();
   await pinned(page).getByRole("link", { name: "example.com" }).click();

@@ -1,6 +1,7 @@
 import { browser } from "wxt/browser";
 import { useI18n, type MessageKey } from "../../app/i18n";
 import { Drawer } from "../../app/Drawer";
+import { ClockSettings } from "./ClockSettings";
 import type { DayportStore } from "../../app/useDayport";
 import { updateSettings } from "../../data/ops";
 import type { Settings } from "../../data/schema";
@@ -91,6 +92,8 @@ export function SettingsDrawer({
         </label>
       </section>
 
+      <ClockSettings clocks={settings.clocks} onChange={(clocks) => set({ clocks })} />
+
       <section aria-label={t("sections")}>
         <h3 className="heading">{t("sections")}</h3>
         {(
@@ -98,6 +101,7 @@ export function SettingsDrawer({
             ["showFrequent", "frequent"],
             ["showLater", "continueLater"],
             ["showClosed", "recentlyClosed"],
+            ["showNotes", "notes"],
           ] as const
         ).map(([key, label]) => (
           <label className="check" key={key}>
@@ -122,7 +126,7 @@ export function SettingsDrawer({
           {t("singleKey")}
         </label>
         <p className="meta" style={{ margin: 0 }}>
-          {t("shortcutsNote")}
+          {t("shortcutsNote")} {t("modeShortcuts")}
         </p>
       </section>
 

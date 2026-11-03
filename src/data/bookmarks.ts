@@ -65,5 +65,5 @@ export function bookmarksToImport(
     node.children.forEach(visit);
   };
   roots.forEach(visit);
-  return { ok: true, groups, settings: null, rejected };
+  return { ok: true, groups, settings: null, note: null, rejected };
 }

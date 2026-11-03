@@ -4,6 +4,17 @@ Notable project changes will be recorded here.
 
 ## Unreleased
 
+### Added
+
+- World clocks: up to 8 cities, four shown at the top right; a comparison popover lines cities up on a 24-hour strip, with UTC offsets for the chosen date and "Tomorrow" / "Yesterday" labels. Daylight saving follows the browser's time-zone data.
+- One autosaved note in a tool column, with an expanded editor, Markdown export, and a "Load latest / Keep mine" prompt when another tab changed it. Notes can be included in backups.
+- Search modes: saved links, web (Chrome's default engine), ChatGPT, and Claude, switched with Alt+1 to Alt+4. AI modes copy a multi-line draft and open the service; no saved link match lets Enter search the web.
+
+### Changed
+
+- Adds the required `search` permission, which has no install warning.
+- Reset on the options page also clears the note, tabs saved for later, and suggestion preferences.
+
 ## 0.2.0 — 2026-11-04
 
 Milestone 2: rediscover and continue.

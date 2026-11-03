@@ -13,7 +13,9 @@ import { ContinueLater } from "./ContinueLater";
 import { Frequent } from "./Frequent";
 import { Navigation } from "./Navigation";
 import { RecentlyClosed } from "./RecentlyClosed";
-import { SearchBox } from "./SearchBox";
+import { Clocks } from "./Clocks";
+import { Notes } from "./Notes";
+import { SearchBox, type SearchHandle } from "./SearchBox";
 import { SettingsDrawer } from "./SettingsDrawer";
 
 export function App() {
@@ -33,7 +35,7 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
   const [editing, setEditing] = useState(false);
   const [addingGroupId, setAddingGroupId] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const searchRef = useRef<HTMLInputElement>(null);
+  const searchRef = useRef<SearchHandle>(null);
   const later = useStored(KEYS.later, laterCodec);
   const { data, status, apply, retry } = store;
   const settings = data?.settings;
@@ -103,15 +105,18 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
       <div className="container" data-empty-space="true">
         <header className="masthead" data-empty-space="true">
           <h1 className="date">{dateText}</h1>
-          <button
-            type="button"
-            className="btn btn-icon"
-            aria-label={t("settings")}
-            disabled={!data}
-            onClick={() => setSettingsOpen(true)}
-          >
-            <SettingsIcon />
-          </button>
+          <div className="masthead-end">
+            <Clocks clocks={settings?.clocks ?? []} />
+            <button
+              type="button"
+              className="btn btn-icon"
+              aria-label={t("settings")}
+              disabled={!data}
+              onClick={() => setSettingsOpen(true)}
+            >
+              <SettingsIcon />
+            </button>
+          </div>
         </header>
 
         {status === "unreadable" && (
@@ -130,49 +135,60 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
 
         {data && (
           <div className="workspace" data-empty-space="true">
-            {data.groups.length === 0 && !editing ? (
-              <section className="first-run" aria-labelledby="first-run-title">
-                <h2 id="first-run-title">{t("firstRunTitle")}</h2>
-                <p>{t("firstRunBody")}</p>
-                <div className="actions">
-                  <button type="button" className="btn btn-primary btn-lg" onClick={startFirstLink}>
-                    {t("firstRunAdd")}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-lg"
-                    onClick={() =>
-                      void browser.tabs.create({
-                        url: browser.runtime.getURL("/options.html#bookmarks"),
-                      })
-                    }
-                  >
-                    {t("firstRunImport")}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-lg"
-                    onClick={() => void browser.runtime.openOptionsPage()}
-                  >
-                    {t("firstRunRestore")}
-                  </button>
+            <div className="nav-column" data-empty-space="true">
+              {data.groups.length === 0 && !editing ? (
+                <section className="first-run" aria-labelledby="first-run-title">
+                  <h2 id="first-run-title">{t("firstRunTitle")}</h2>
+                  <p>{t("firstRunBody")}</p>
+                  <div className="actions">
+                    <button
+                      type="button"
+                      className="btn btn-primary btn-lg"
+                      onClick={startFirstLink}
+                    >
+                      {t("firstRunAdd")}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-lg"
+                      onClick={() =>
+                        void browser.tabs.create({
+                          url: browser.runtime.getURL("/options.html#bookmarks"),
+                        })
+                      }
+                    >
+                      {t("firstRunImport")}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-lg"
+                      onClick={() => void browser.runtime.openOptionsPage()}
+                    >
+                      {t("firstRunRestore")}
+                    </button>
+                  </div>
+                </section>
+              ) : (
+                <Navigation
+                  data={data}
+                  apply={guardedApply}
+                  editing={editing}
+                  setEditing={setEditing}
+                  addingGroupId={addingGroupId}
+                  setAddingGroupId={setAddingGroupId}
+                />
+              )}
+              {(data.settings.showFrequent || data.settings.showLater) && (
+                <div className="auto-sections" data-empty-space="true">
+                  {data.settings.showFrequent && <Frequent data={data} apply={guardedApply} />}
+                  {data.settings.showLater && <ContinueLater />}
                 </div>
-              </section>
-            ) : (
-              <Navigation
-                data={data}
-                apply={guardedApply}
-                editing={editing}
-                setEditing={setEditing}
-                addingGroupId={addingGroupId}
-                setAddingGroupId={setAddingGroupId}
-              />
-            )}
-            {(data.settings.showFrequent || data.settings.showLater) && (
-              <div className="auto-sections" data-empty-space="true">
-                {data.settings.showFrequent && <Frequent data={data} apply={guardedApply} />}
-                {data.settings.showLater && <ContinueLater />}
-              </div>
+              )}
+            </div>
+            {data.settings.showNotes && (
+              <aside className="tools" data-empty-space="true">
+                <Notes />
+              </aside>
             )}
           </div>
         )}

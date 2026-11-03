@@ -12,12 +12,17 @@ import {
   replaceImport,
   type ParsedBackup,
 } from "../../data/backup";
+import { mergeNoteText, noteCodec } from "../../data/note";
 import { emptyData, type DayportData } from "../../data/schema";
+import { KEYS, mutateKey } from "../../data/storage";
+import { useStored } from "../../app/useStored";
 import { BookmarksCard, ExcludedCard, PermissionsCard } from "./Discovery";
 
 export function Options() {
   const store = useDayport();
   const i18n = useAppearance(store.data?.settings);
+  const note = useStored(KEYS.note, noteCodec);
+  const noteText = note.value?.text ?? "";
   const ready = store.data !== null;
 
   // Links such as options.html#bookmarks scroll to their card once it exists.
@@ -37,8 +42,8 @@ export function Options() {
         )}
         {store.data && (
           <>
-            <ExportCard data={store.data} />
-            <ImportCard data={store.data} apply={store.apply} />
+            <ExportCard data={store.data} noteText={noteText} />
+            <ImportCard data={store.data} apply={store.apply} noteText={noteText} />
             <BookmarksCard data={store.data} apply={store.apply} />
           </>
         )}
@@ -56,8 +61,23 @@ export function Options() {
   );
 }
 
-function download(data: DayportData) {
-  const file = createBackup(data, { links: true, settings: true });
+/** Imported notes go through the note's own key, like edits from a new tab page. */
+async function writeNote(edit: (text: string) => string): Promise<boolean> {
+  try {
+    await mutateKey(KEYS.note, noteCodec, (note) => ({
+      ...note,
+      text: edit(note.text),
+      updatedAt: Date.now(),
+      writer: "options",
+    }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function download(data: DayportData, noteText: string) {
+  const file = createBackup(data, { links: true, settings: true, note: noteText });
   downloadJson(file, backupFileName());
 }
 
@@ -71,10 +91,12 @@ function downloadJson(value: unknown, name: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-function ExportCard({ data }: { data: DayportData }) {
+function ExportCard({ data, noteText }: { data: DayportData; noteText: string }) {
   const { t } = useI18n();
   const [links, setLinks] = useState(true);
   const [settings, setSettings] = useState(true);
+  const [note, setNote] = useState(true);
+  const hasNote = noteText.trim().length > 0;
   return (
     <section className="card" aria-labelledby="export-title">
       <h2 id="export-title">{t("exportTitle")}</h2>
@@ -91,14 +113,25 @@ function ExportCard({ data }: { data: DayportData }) {
           />
           {t("exportSettings")}
         </label>
+        {hasNote && (
+          <label className="check">
+            <input type="checkbox" checked={note} onChange={(e) => setNote(e.target.checked)} />
+            {t("exportNotes")}
+          </label>
+        )}
       </div>
       <p className="meta">{t("exportNote")}</p>
       <div>
         <button
           type="button"
           className="btn btn-primary btn-lg"
-          disabled={!links && !settings}
-          onClick={() => downloadJson(createBackup(data, { links, settings }), backupFileName())}
+          disabled={!links && !settings && !(hasNote && note)}
+          onClick={() =>
+            downloadJson(
+              createBackup(data, { links, settings, note: hasNote && note ? noteText : "" }),
+              backupFileName(),
+            )
+          }
         >
           {t("exportButton", { file: backupFileName() })}
         </button>
@@ -114,7 +147,15 @@ type ImportState =
   | { step: "confirm"; fileName: string; parsed: Extract<ParsedBackup, { ok: true }> }
   | { step: "done"; message: string };
 
-function ImportCard({ data, apply }: { data: DayportData; apply: DayportStore["apply"] }) {
+function ImportCard({
+  data,
+  apply,
+  noteText,
+}: {
+  data: DayportData;
+  apply: DayportStore["apply"];
+  noteText: string;
+}) {
   const { t } = useI18n();
   const [state, setState] = useState<ImportState>({ step: "idle" });
   const [mode, setMode] = useState<"merge" | "replace">("merge");
@@ -136,7 +177,10 @@ function ImportCard({ data, apply }: { data: DayportData; apply: DayportStore["a
   const runMerge = async (parsed: Extract<ParsedBackup, { ok: true }>) => {
     const before = data.groups.reduce((sum, group) => sum + group.links.length, 0);
     const next = mergeImport(data, parsed);
-    const ok = await apply(() => next);
+    const incoming = parsed.note;
+    const ok =
+      (await apply(() => next)) &&
+      (incoming === null || (await writeNote((text) => mergeNoteText(text, incoming))));
     const after = next.groups.reduce((sum, group) => sum + group.links.length, 0);
     setState({
       step: ok ? "done" : "error",
@@ -147,7 +191,10 @@ function ImportCard({ data, apply }: { data: DayportData; apply: DayportStore["a
   };
 
   const runReplace = async (parsed: Extract<ParsedBackup, { ok: true }>) => {
-    const ok = await apply((current) => replaceImport(current, parsed));
+    const incoming = parsed.note;
+    const ok =
+      (await apply((current) => replaceImport(current, parsed))) &&
+      (incoming === null || (await writeNote(() => incoming)));
     setState({ step: ok ? "done" : "error", message: ok ? t("replaced") : t("saveFailed") });
   };
 
@@ -200,6 +247,8 @@ function ImportCard({ data, apply }: { data: DayportData; apply: DayportStore["a
               </dd>
               <dt>{t("previewSettings")}</dt>
               <dd>{preview.hasSettings ? t("previewSettingsYes") : t("previewSettingsNo")}</dd>
+              <dt>{t("previewNote")}</dt>
+              <dd>{preview.hasNote ? t("previewSettingsYes") : t("previewSettingsNo")}</dd>
             </dl>
           </div>
           {parsed.rejected.length > 0 && (
@@ -274,7 +323,7 @@ function ImportCard({ data, apply }: { data: DayportData; apply: DayportStore["a
                 onClick={() => {
                   if (mode === "merge") void runMerge(parsed);
                   else {
-                    download(data);
+                    download(data, noteText);
                     setState({
                       ...(state as { fileName: string; parsed: typeof parsed }),
                       step: "confirm",
@@ -317,6 +366,8 @@ function ResetCard({ apply, unreadable }: { apply: DayportStore["apply"]; unread
             onClick={async () => {
               // An unreadable document has no in-memory copy, so write a fresh one directly.
               const ok = unreadable ? await resetStorage() : await apply(() => emptyData());
+              // The note, saved tabs, and suggestion preferences live under their own keys.
+              if (ok) await clearCollections();
               setConfirming(false);
               setDone(ok);
             }}
@@ -335,10 +386,18 @@ function ResetCard({ apply, unreadable }: { apply: DayportStore["apply"]; unread
   );
 }
 
+async function clearCollections(): Promise<void> {
+  const { browser } = await import("wxt/browser");
+  await browser.storage.local
+    .remove([KEYS.later, KEYS.discovery, KEYS.note])
+    .catch(() => undefined);
+}
+
 async function resetStorage(): Promise<boolean> {
   const { save } = await import("../../data/storage");
   try {
     await save(emptyData());
+    await clearCollections();
     location.reload();
     return true;
   } catch {

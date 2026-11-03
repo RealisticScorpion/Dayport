@@ -2,7 +2,7 @@
 
 Status: design intent plus the behavior of the current build (Milestones 1 and 2). This is not a certification. Dayport stores links, settings, tabs saved for later, and suggestion preferences in `chrome.storage.local`, bundles its fonts, and makes no network requests of its own; opening a saved link is ordinary navigation.
 
-Required permissions are `storage`, `favicon`, `activeTab` (the toolbar button and page menu save the tab they were used on), and `contextMenus`. Top sites, history, bookmarks, sessions, and tabs are optional: each is requested only when the user enables the feature that needs it, read on this device only, and can be revoked on the options page. History is analyzed in the page to find recurring visits; neither raw history nor the analysis is stored. Revoking a permission stops future reads; links already pinned or saved for later stay until the user removes them.
+Required permissions are `storage`, `favicon`, `activeTab` (the toolbar button and page menu save the tab they were used on), `contextMenus`, and `search` (web mode sends the typed text to the user's default search engine, only when the user presses Enter). In ChatGPT and Claude modes, Dayport copies the draft to the clipboard and opens the service's start page; the draft is not put in the URL and nothing else is added. Top sites, history, bookmarks, sessions, and tabs are optional: each is requested only when the user enables the feature that needs it, read on this device only, and can be revoked on the options page. History is analyzed in the page to find recurring visits; neither raw history nor the analysis is stored. Revoking a permission stops future reads; links already pinned or saved for later stay until the user removes them.
 
 ## Local by default
 

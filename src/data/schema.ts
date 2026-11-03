@@ -19,6 +19,13 @@ export const GroupSchema = z.object({
   links: z.array(LinkSchema),
 });
 
+export const ClockSchema = z.object({
+  id: z.string().min(1),
+  /** IANA time zone, e.g. "Europe/London". */
+  zone: z.string().min(1).max(64),
+  label: z.string().trim().min(1).max(40),
+});
+
 export const SettingsSchema = z.object({
   theme: z.enum(["system", "light", "dark"]),
   density: z.enum(["comfortable", "compact"]),
@@ -30,6 +37,8 @@ export const SettingsSchema = z.object({
   showFrequent: z.boolean(),
   showLater: z.boolean(),
   showClosed: z.boolean(),
+  showNotes: z.boolean(),
+  clocks: z.array(ClockSchema).max(8),
 });
 
 export const DataSchema = z.object({
@@ -42,6 +51,7 @@ export const DataSchema = z.object({
 export type Link = z.infer<typeof LinkSchema>;
 export type Group = z.infer<typeof GroupSchema>;
 export type Settings = z.infer<typeof SettingsSchema>;
+export type Clock = z.infer<typeof ClockSchema>;
 export type DayportData = z.infer<typeof DataSchema>;
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -54,6 +64,8 @@ export const DEFAULT_SETTINGS: Settings = {
   showFrequent: true,
   showLater: true,
   showClosed: true,
+  showNotes: true,
+  clocks: [],
 };
 
 export function emptyData(now = Date.now()): DayportData {

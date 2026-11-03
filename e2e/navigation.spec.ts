@@ -9,7 +9,7 @@ import { launch, newProfileDir, newTabUrl, optionsUrl } from "./extension";
 async function addLink(page: Page, url: string, title: string) {
   await page.getByPlaceholder("URL · github.com").fill(url);
   await page.getByPlaceholder("Name (optional)").fill(title);
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
 }
 
 test("M1 acceptance: create, persist, search, export, and restore", async () => {
@@ -131,7 +131,7 @@ test("undo restores a deleted link and settings apply immediately", async () => 
   // Rejects unsafe URLs with an inline message.
   await page.getByRole("button", { name: "+ Add link" }).click();
   await page.getByPlaceholder("URL · github.com").fill("javascript:alert(1)");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByRole("alert")).toHaveText(
     "Only http, https, and chrome addresses are supported",
   );

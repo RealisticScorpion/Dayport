@@ -11,7 +11,7 @@ A local-first Chrome new tab dashboard for dense navigation, useful widgets, and
 
 ## Project status
 
-**Preview 0.1.0 is published on the Chrome Web Store; 0.2.0 is in preparation.** The extension runs from the release package or from source in Chrome 120 or newer: grouped links with editing and reordering, keyboard search, settings, and versioned backup import and export. Milestone 2 — frequent pages, bookmark import, Continue later, and recently closed tabs — is on `main` and ships in 0.2.0. Everything else in the table below is planned. See the [roadmap](docs/roadmap.md) for status.
+**Preview 0.1.0 is published on the Chrome Web Store; 0.2.0 is in preparation.** The extension runs from the release package or from source in Chrome 120 or newer: grouped links with editing and reordering, keyboard search, settings, and versioned backup import and export. Milestone 2 — frequent pages, bookmark import, Continue later, and recently closed tabs — ships in 0.2.0. Milestone 3a — world clocks, an autosaved note, and web and AI search modes — is on `main`. Everything else in the table below is planned. See the [roadmap](docs/roadmap.md) for status.
 
 ## What Dayport is for
 

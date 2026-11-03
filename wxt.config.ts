@@ -20,12 +20,14 @@ export default defineConfig({
     minimum_chrome_version: "120",
     // `favicon` reads Chrome's local favicon cache; no remote icon requests.
     // `activeTab` and `contextMenus` let the toolbar button and the page menu
-    // save the current tab without broad tab access.
+    // save the current tab without broad tab access. `search` runs web
+    // searches with the user's default engine.
     permissions: [
       "storage",
       "favicon",
       "activeTab",
       "contextMenus",
+      "search",
       ...(e2e ? optionalPermissions : []),
     ],
     optional_permissions: e2e ? [] : [...optionalPermissions],

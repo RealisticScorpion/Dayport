@@ -8,6 +8,7 @@ import {
   type Group,
   type Settings,
 } from "./schema";
+import { MAX_NOTE_LENGTH } from "./note";
 import { normalizeUrl, titleFromUrl, urlKey } from "./url";
 
 export const BACKUP_FORMAT = "dayport-backup";
@@ -15,6 +16,8 @@ export const BACKUP_FORMAT = "dayport-backup";
 export interface BackupContents {
   links: boolean;
   settings: boolean;
+  /** The note's text when it should be included. */
+  note?: string;
 }
 
 export interface BackupFile {
@@ -23,6 +26,7 @@ export interface BackupFile {
   exportedAt: string;
   groups?: Group[];
   settings?: Settings;
+  note?: { text: string };
 }
 
 export function createBackup(
@@ -36,6 +40,7 @@ export function createBackup(
     exportedAt: now.toISOString(),
     ...(contents.links ? { groups: data.groups } : {}),
     ...(contents.settings ? { settings: data.settings } : {}),
+    ...(contents.note ? { note: { text: contents.note } } : {}),
   };
 }
 
@@ -54,7 +59,13 @@ export interface Rejected {
 
 export type ParsedBackup =
   | { ok: false; error: "json" | "format" | "version" | "empty" }
-  | { ok: true; groups: Group[]; settings: Settings | null; rejected: Rejected[] };
+  | {
+      ok: true;
+      groups: Group[];
+      settings: Settings | null;
+      note: string | null;
+      rejected: Rejected[];
+    };
 
 const MAX_IMPORT_BYTES = 5 * 1024 * 1024;
 
@@ -114,8 +125,12 @@ export function parseBackup(text: string, makeId: NewId = newId): ParsedBackup {
     }
   }
   const settings = file.settings === undefined ? null : readSettings(file.settings);
-  if (file.groups === undefined && settings === null) return { ok: false, error: "empty" };
-  return { ok: true, groups, settings, rejected };
+  const rawNote = asRecord(file.note)?.text;
+  const note = typeof rawNote === "string" ? rawNote.slice(0, MAX_NOTE_LENGTH) : null;
+  if (file.groups === undefined && settings === null && note === null) {
+    return { ok: false, error: "empty" };
+  }
+  return { ok: true, groups, settings, note, rejected };
 }
 
 export interface ImportPreview {
@@ -123,6 +138,7 @@ export interface ImportPreview {
   links: number;
   duplicateLinks: number;
   hasSettings: boolean;
+  hasNote: boolean;
 }
 
 export function previewImport(
@@ -138,6 +154,7 @@ export function previewImport(
     links: links.length,
     duplicateLinks: links.filter((link) => existing.has(urlKey(link.url))).length,
     hasSettings: parsed.settings !== null,
+    hasNote: parsed.note !== null,
   };
 }
 

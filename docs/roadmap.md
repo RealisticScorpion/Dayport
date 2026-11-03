@@ -32,15 +32,23 @@ Acceptance (automated in `e2e/rediscover.spec.ts`): permission refusal leaves ma
 
 ## Milestone 3: backgrounds and daily tools
 
-- [ ] Local images, remote image lists, and one documented JSON image source
-- [ ] Scheduled rotation, manual skip, and last-successful-image fallback
-- [ ] World clocks and cross-time-zone comparison
-- [ ] Weather with manual city selection and cached results
-- [ ] Autosaved notes with concurrent-edit handling and export
-- [ ] Web search and ChatGPT / Claude draft-copy-open actions
-- [ ] Personal WeRead highlight import, browsing, and rotation
+Split into an offline part (3a) and a part that talks to external services (3b).
 
-Acceptance: cached content works offline; failed provider requests do not block navigation; time comparisons handle daylight saving changes; invalid highlight imports preserve existing data.
+### 3a: offline tools
+
+- [x] World clocks and cross-time-zone comparison
+- [x] Autosaved notes with concurrent-edit handling and export
+- [x] Web search and ChatGPT / Claude draft-copy-open actions
+
+Acceptance (automated in `e2e/tools.spec.ts` and `src/data/clocks.test.ts`): time comparisons handle daylight saving changes; a note edited in two tabs is never overwritten silently; search modes reach the default search engine and the AI services without sending anything else.
+
+### 3b: external services
+
+- [ ] Weather from Open-Meteo with manual city selection and cached results
+- [ ] Backgrounds from Unsplash Collections (user-supplied access key, attribution, download tracking), scheduled rotation, manual skip, and last-successful-image fallback
+- [ ] WeRead highlights: feasibility review of an official or user-controlled import path, then browsing and rotation
+
+Acceptance: cached content works offline; failed provider requests do not block navigation; invalid highlight imports preserve existing data.
 
 ## Milestone 4: release readiness
 
