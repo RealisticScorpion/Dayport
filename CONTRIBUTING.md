@@ -13,20 +13,15 @@ Security vulnerabilities belong in the [private reporting process](SECURITY.md),
 
 ## Local setup
 
-Use Node.js 24 or newer and npm. The `.nvmrc` file and CI select Node.js 24. Run commands from the repository root:
+Use Node.js 22.12 or newer with npm 11. The `.nvmrc` file and CI select Node.js 24. Run commands from the repository root:
 
 ```sh
 npm ci
-npm run check
+npx playwright install chromium
+npm run typecheck && npm test && npm run build && npm run test:e2e && npm run check
 ```
 
-To apply formatting:
-
-```sh
-npm run format
-```
-
-The repository currently has documentation and formatting tooling only. There is no application build, runtime test suite, or extension package yet. When application code is added, its pull request must include reproducible development, build, and verification instructions.
+`npm run format` applies formatting. The [README](README.md#getting-involved) lists every command and explains how to load the unpacked extension. Run `node scripts/generate-fonts-css.mjs` after updating a font package and `node scripts/render-icons.mjs` after changing `assets/icon.svg`.
 
 ## Pull requests
 

@@ -12,3 +12,7 @@ exports/
 local-data/
 *.pem
 *.key
+.output/
+.wxt/
+test-results/
+playwright-report/

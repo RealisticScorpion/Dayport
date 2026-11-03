@@ -1,12 +1,12 @@
 # Proposed architecture
 
-Status: design proposal. This repository does not yet contain application source. Node.js and Prettier currently support documentation checks only.
+Status: Milestone 1 is implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
 
 ## Target
 
 Chrome desktop, Manifest V3. macOS / Apple Silicon is a contributor environment, not the only supported runtime. Browser compatibility must be stated and tested when the extension is implemented.
 
-The proposed UI stack is TypeScript, React, and Vite. Before adding an extension framework, inspect whether its manifest handling, development workflow, and packaging justify the dependency. Evaluate existing project patterns and compatible reusable libraries before implementing generic capabilities. Third-party source reuse requires compatible licensing and retained attribution; Dayport has not imported another extension's source.
+The UI stack is TypeScript, React, and Vite, built with [WXT](https://wxt.dev). WXT was chosen over a hand-written manifest because it generates the manifest from entrypoints, provides development reload, and produces the store zip; it adds no runtime code beyond a small `browser` wrapper. The minimum supported browser is Chrome 120 (declared as `minimum_chrome_version`). Tests use Vitest for data logic and Playwright with Chromium for the built extension. Evaluate existing project patterns and compatible reusable libraries before implementing generic capabilities. Third-party source reuse requires compatible licensing and retained attribution; Dayport has not imported another extension's source.
 
 ## Responsibilities
 
@@ -18,6 +18,33 @@ The proposed UI stack is TypeScript, React, and Vite. Before adding an extension
 | Local persistence   | Versioned settings, user content, cached assets, and import transactions | Remote synchronization unless explicitly introduced later |
 
 Keep feature rules with their feature. Introduce a shared interface only when there are real alternate implementations. Start with a fixed set of tools rather than a plugin SDK, marketplace, or generic dashboard engine.
+
+## Code layout
+
+| Path                       | Contents                                                                  |
+| -------------------------- | ------------------------------------------------------------------------- |
+| `src/data/`                | Schema, pure edit operations, search, migration, backup import and export |
+| `src/app/`                 | Shared UI: storage hook, appearance, translations, toasts, icons          |
+| `src/entrypoints/newtab/`  | The new tab page                                                          |
+| `src/entrypoints/options/` | The options page (data import, export, reset, privacy)                    |
+| `e2e/`                     | Playwright tests that load the built extension                            |
+| `scripts/`                 | Font CSS, icon, and store screenshot generators                           |
+
+## Data model
+
+One versioned document is stored under the `dayport` key in `chrome.storage.local`:
+
+```ts
+{ version: 1, updatedAt: number, groups: Group[], settings: Settings }
+Group = { id, name, links: Link[] }       // name 1–60 chars
+Link  = { id, title, url }                // title 1–200 chars; url http, https, or chrome only
+Settings = { theme, density, favicons, timeTint, language, singleKeyShortcuts }
+```
+
+- Every edit is a pure function in `src/data/ops.ts`. The page renders the result first and then writes the whole document; writes are serialized so an older write never lands after a newer one. A failed write keeps the change on screen and shows a Retry action.
+- Other open pages receive changes through `storage.onChanged` and adopt the newer document.
+- Unknown or damaged documents are never overwritten automatically. Valid groups are kept, missing settings fall back to defaults per field, and unreadable data shows an error with a reset path on the options page.
+- Backups use `{ format: "dayport-backup", version, exportedAt, groups?, settings? }`. Imports validate every link, skip unsafe or malformed entries with a reason, regenerate ids, and change nothing until the user confirms merge or replace.
 
 ## Storage and updates
 
@@ -32,17 +59,19 @@ Keep feature rules with their feature. Introduce a shared interface only when th
 
 ## Browser API boundaries
 
-| Capability            | Candidate API                  | Permission strategy                                     |
-| --------------------- | ------------------------------ | ------------------------------------------------------- |
-| New tab replacement   | `chrome_url_overrides.newtab`  | Declare the bundled extension page                      |
-| Persistent settings   | `chrome.storage`               | Request `storage` as needed by implementation           |
-| Frequent destinations | `chrome.topSites`              | Optional on enabling automatic suggestions              |
-| Enhanced discovery    | `chrome.history`               | Optional and separately explained                       |
-| Bookmark import       | `chrome.bookmarks`             | Optional on import                                      |
-| Recently closed       | `chrome.sessions`              | Optional on enabling the widget                         |
-| Selected tab saving   | `chrome.tabs` / `activeTab`    | Determine the least privilege required by the actual UI |
-| Scheduled updates     | `chrome.alarms`                | Add when scheduled work exists                          |
-| Remote providers      | Origin-scoped host permissions | Request only enabled provider origins                   |
+| Capability            | Candidate API                         | Permission strategy                                                    |
+| --------------------- | ------------------------------------- | ---------------------------------------------------------------------- |
+| New tab replacement   | `chrome_url_overrides.newtab`         | Declare the bundled extension page                                     |
+| Persistent settings   | `chrome.storage`                      | `storage`, required (implemented)                                      |
+| Site icons            | `chrome://favicon` cache (`_favicon`) | `favicon`, required (implemented); no remote requests                  |
+| Web search            | `chrome.search`                       | Planned with web search mode                                           |
+| Frequent destinations | `chrome.topSites`                     | Optional on enabling automatic suggestions                             |
+| Enhanced discovery    | `chrome.history`                      | Optional and separately explained                                      |
+| Bookmark import       | `chrome.bookmarks`                    | Optional on import                                                     |
+| Recently closed       | `chrome.sessions`                     | Optional on enabling the widget                                        |
+| Selected tab saving   | `chrome.tabs`                         | Optional; listing a window's tabs needs `tabs`, requested on first use |
+| Scheduled updates     | `chrome.alarms`                       | Add when scheduled work exists                                         |
+| Remote providers      | Origin-scoped host permissions        | Request only enabled provider origins                                  |
 
 The table is a plan, not an existing manifest or a claim that all listed permissions are necessary. Keep permissions absent until the corresponding capability exists.
 

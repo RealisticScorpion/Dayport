@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-**项目规划与仓库初始化阶段。** 当前仓库包含产品设计、拟议架构和开源协作规范。尚无可安装扩展、应用源码或正式发布版本，下列功能均为开发计划。
+**已完成里程碑 1（导航闭环），预览版尚未发布。** 扩展可从源码安装到 Chrome 120 及以上版本：分组链接的编辑与排序、键盘搜索、设置，以及带版本号的备份导入导出。下表其余功能仍在计划中，进度见[路线图](docs/roadmap.md)。
 
 ## 想解决的问题
 
@@ -43,16 +43,18 @@
 
 先阅读[产品设计](docs/design.md)、[架构](docs/architecture.md)和[路线图](docs/roadmap.md)。公开 Issue、PR、截图和日志中请使用合成数据。
 
-当前文档仓库使用 Node.js 24 或更新版本和 npm；CI 使用 `.nvmrc` 指定的 Node.js 24：
+使用 Node.js 22.12 或更新版本和 npm 11（CI 使用 `.nvmrc` 指定的 Node.js 24）：
 
 ```sh
 git clone https://github.com/RealisticScorpion/Dayport.git
 cd Dayport
 npm ci
-npm run check
+npm run build
 ```
 
-`npm run format` 用于格式化文档和配置。应用构建、安装与测试说明将在引入应用代码时补充。
+然后在 Chrome 中加载：打开 `chrome://extensions`，开启**开发者模式**，点击**加载已解压的扩展程序**，选择 `.output/chrome-mv3` 目录。之后打开新标签页即可使用。
+
+常用命令：`npm run dev`（开发模式）、`npm run typecheck`、`npm test`（单元测试）、`npm run test:e2e`（浏览器端到端测试，需先 `npm run build` 和 `npx playwright install chromium`）、`npm run zip`（打包商店上传文件）、`npm run check`（格式检查）。
 
 ## 项目规范
 

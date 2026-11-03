@@ -11,14 +11,14 @@ All unchecked items are planned work, not existing features. Milestones express 
 
 ## Milestone 1: navigation loop
 
-- [ ] Runnable Manifest V3 extension with documented local installation
-- [ ] Compact grouped links with add, edit, delete, and manual ordering
-- [ ] Local persistence with surfaced save failures
-- [ ] Keyboard navigation, readable contrast, and responsive density
-- [ ] Search saved links and open selected destinations
-- [ ] Versioned settings and link export/import
+- [x] Runnable Manifest V3 extension with documented local installation
+- [x] Compact grouped links with add, edit, delete, and manual ordering
+- [x] Local persistence with surfaced save failures
+- [x] Keyboard navigation, readable contrast, and responsive density
+- [x] Search saved links and open selected destinations
+- [x] Versioned settings and link export/import
 
-Acceptance: create a group, save a link, reopen Chrome, find and open the link with the keyboard, then export and restore it without losing existing content after an invalid import.
+Acceptance (automated in `e2e/navigation.spec.ts`): create a group, save a link, reopen Chrome, find and open the link with the keyboard, then export and restore it without losing existing content after an invalid import.
 
 ## Milestone 2: rediscover and continue
 

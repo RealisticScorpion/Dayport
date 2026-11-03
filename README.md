@@ -11,7 +11,7 @@ A local-first Chrome new tab dashboard for dense navigation, useful widgets, and
 
 ## Project status
 
-**Planning / repository bootstrap.** This repository currently contains the product design, proposed architecture, and open-source contribution infrastructure. There is no installable browser extension, application source, or published release yet. The features below are planned, not implemented.
+**Milestone 1 (navigation loop) implemented; preview not yet published.** The extension runs from source in Chrome 120 or newer: grouped links with editing and reordering, keyboard search, settings, and versioned backup import and export. Everything else in the table below is planned. See the [roadmap](docs/roadmap.md) for status.
 
 ## What Dayport is for
 
@@ -41,16 +41,25 @@ Keep important links within reach, rediscover frequently used pages, and put unf
 
 Read the [design](docs/design.md), [proposed architecture](docs/architecture.md), and [roadmap](docs/roadmap.md) before starting implementation. Open an [issue](https://github.com/RealisticScorpion/Dayport/issues) to discuss a focused change.
 
-For the current documentation-only repository, use Node.js 24 or newer and npm. CI uses Node.js 24, as specified in `.nvmrc`.
+Use Node.js 22.12 or newer with npm 11 (CI uses Node.js 24 from `.nvmrc`).
 
 ```sh
 git clone https://github.com/RealisticScorpion/Dayport.git
 cd Dayport
 npm ci
-npm run check
+npm run build
 ```
 
-`npm run format` formats Markdown, JSON, and YAML. Application build and test commands will be documented when application code is introduced.
+Then load it in Chrome: open `chrome://extensions`, turn on **Developer mode**, choose **Load unpacked**, and select `.output/chrome-mv3`. Open a new tab to use Dayport.
+
+| Command                    | Purpose                                                                                                     |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `npm run dev`              | Development build with reload in a temporary Chrome window                                                  |
+| `npm run typecheck`        | TypeScript checks                                                                                           |
+| `npm test`                 | Unit tests for data, search, and import logic                                                               |
+| `npm run test:e2e`         | Browser tests against the built extension (run `npm run build` and `npx playwright install chromium` first) |
+| `npm run zip`              | Package `.output/dayport-<version>-chrome.zip` for the Chrome Web Store                                     |
+| `npm run check` / `format` | Prettier formatting                                                                                         |
 
 ## Documentation
 

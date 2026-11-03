@@ -1,6 +1,6 @@
 # Privacy design
 
-Status: planned behavior, not a runtime privacy certification. There is no installable Dayport extension at this stage. The initial repository contains documentation and contributor tooling only.
+Status: design intent plus the behavior of the current Milestone 1 build. This is not a certification. Milestone 1 stores links and settings in `chrome.storage.local`, requests only the `storage` and `favicon` permissions, bundles its fonts, and makes no network requests of its own; opening a saved link is ordinary navigation.
 
 ## Local by default
 

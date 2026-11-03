@@ -36,7 +36,7 @@ Direction: quiet typography. Dayport should feel like a well-set index page rath
 
 ### Typography
 
-Fonts are bundled with the extension; no remote font requests. Source Han Serif SC is large, so ship only the regular weight, subset to the characters the date and highlight styles need where practical, and fall back to Noto Serif CJK SC or Songti SC when it is unavailable. CJK serifs have no true italic, so highlights stay upright.
+Fonts are bundled with the extension; no remote font requests. Source Han Serif SC ships as its Noto Serif SC build in regular weight only, split into WOFF2 unicode-range chunks (about 5 MB in total), so the browser loads only the chunks that the visible text needs. This works for arbitrary highlight text, not just the date. CJK serifs have no true italic, so highlights stay upright.
 
 | Role            | Family                                           | Size / line height | Notes                                      |
 | --------------- | ------------------------------------------------ | ------------------ | ------------------------------------------ |
