@@ -1,0 +1,29 @@
+name: Feature request
+description: Describe the problem and the smallest useful improvement.
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe a concrete situation without including private information.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: What would a user do, and what should happen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Existing features, browser capabilities, or simpler approaches.
+  - type: textarea
+    id: impact
+    attributes:
+      label: Permissions, privacy, and dependencies
+      description: Mention any additional data access or third-party services you expect.
