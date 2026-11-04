@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: Milestones 1, 2, and 3a, and weather and backgrounds from 3b, are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
+Status: Milestones 1, 2, and 3 are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
 
 ## Target
 
@@ -56,7 +56,11 @@ Two smaller collections have their own keys, because the toolbar popup and the b
 "dayport-note":      { version: 1, text, updatedAt, writer }                       // one note; writer = page id
 "dayport-weather":   { version: 1, key, fetchedAt, conditions }                    // last forecast; key = rounded coordinates
 "dayport-background": { version: 1, sourceKey, index, shownAt, paused, lastGood, jsonImages }
+"dayport-weread":     { version: 1, apiKey }                                       // the user's own WeRead Skill key
+"dayport-highlights": { version: 1, syncedAt, books: { bookId, title, author, highlights }[] }
 ```
+
+WeRead sync calls Tencent's documented Agent API gateway (`POST https://i.weread.qq.com/api/agent/gateway`, `Authorization: Bearer <key>`, `skill_version` in every body) for `/user/notebooks`, `/book/bookmarklist`, and `/review/list/mine`. The whole library is built in memory and written once, so a failed or rejected sync leaves the saved highlights untouched; an `upgrade_info` reply stops the sync until Dayport updates `SKILL_VERSION`. The gateway only allows `weread.qq.com` as a cross-origin caller, hence the host permission.
 
 Local background images are blobs in IndexedDB (database `dayport`, store `images`, with a focal point per image) and are announced to other pages over a `BroadcastChannel`. They are not part of backups. Rotation is decided once per page open from elapsed time (`advance` in `src/data/background.ts`); a broken image falls through to the next few, and the last image that loaded stays underneath while a new one loads.
 
@@ -91,6 +95,7 @@ Every write to these keys re-reads storage and applies a pure edit (`mutateKey` 
 | Choose other tabs      | `chrome.tabs`                         | `tabs`, optional, requested from the popup (implemented)                             |
 | Scheduled updates      | `chrome.alarms`                       | Add when scheduled work exists                                                       |
 | Weather                | `fetch` to Open-Meteo                 | None: the API allows cross-origin requests (implemented)                             |
+| WeRead highlights      | Optional host permission              | Only `https://i.weread.qq.com/*`, requested on Save and sync (implemented)           |
 | Background JSON source | Optional host permission, one origin  | `https://*/*` declared optional; only the source's origin is requested (implemented) |
 | Remote providers       | Origin-scoped host permissions        | Request only enabled provider origins                                                |
 

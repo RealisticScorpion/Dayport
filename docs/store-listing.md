@@ -30,6 +30,7 @@ Source of truth for the Chrome Web Store submission. Update it with each release
 > • Frequent pages from Chrome's top sites, and optionally pages you revisit on different days, found by analyzing history on your device. Pin one, hide it, or exclude a whole site.
 > • Continue later: save open tabs from the toolbar button or the page menu, and close them only after they are safely saved. Restore recently closed tabs and windows from the footer.
 > • Import bookmark folders as groups.
+> • Daily tools: world clocks with time-zone comparison, an autosaved note, weather, background images, web and AI search modes, and your WeRead highlights (with your own WeRead Skill key).
 > • Light and dark themes, comfortable or compact density, and quiet monochrome icons that light up on hover.
 > • Back up and restore your links with a versioned file. Imports are previewed and validated before anything changes.
 > • English and Simplified Chinese.
@@ -47,6 +48,7 @@ Source of truth for the Chrome Web Store submission. Update it with each release
 > • 常去推荐：来自 Chrome 的热门网站；也可选择在本机分析历史记录，找出你隔几天就会回访的页面。可以置顶、隐藏，或排除整个网站。
 > • 稍后继续：用工具栏按钮或右键菜单保存打开的标签页，确认保存成功后才关闭。页面底部可恢复最近关闭的标签页和窗口。
 > • 把书签文件夹导入为分组。
+> • 日常工具：世界时钟与时区对照、自动保存的笔记、天气、背景图片、网页与 AI 搜索模式，以及你的微信读书划线（使用你自己的微信读书 Skill Key）。
 > • 浅色和深色主题、舒适或紧凑密度，图标平时是安静的灰度，悬停时才显示颜色。
 > • 用带版本号的文件备份和恢复链接，导入前会先预览和校验，确认后才会改动。
 > • 支持简体中文和英文。

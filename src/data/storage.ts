@@ -15,6 +15,7 @@ export const KEYS = {
   weather: "dayport-weather",
   background: "dayport-background",
   weread: "dayport-weread",
+  highlights: "dayport-highlights",
 } as const;
 
 export async function loadKey(key: string): Promise<unknown> {

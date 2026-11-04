@@ -1196,6 +1196,43 @@ a.row:hover,
   accent-color: var(--accent);
 }
 
+/* Highlights */
+.excerpt {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+.excerpt blockquote {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 26px;
+}
+.excerpt-note {
+  margin: 0;
+  padding-left: 10px;
+  border-left: 2px solid var(--hairline);
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--ink-muted);
+}
+.excerpt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.excerpt-list .excerpt + .excerpt {
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+.field.select {
+  width: 100%;
+  height: 32px;
+  background: var(--ground);
+  box-shadow: none;
+}
+
 /* First run */
 
 .first-run {

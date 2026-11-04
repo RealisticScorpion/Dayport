@@ -15,6 +15,7 @@ import { Navigation } from "./Navigation";
 import { RecentlyClosed } from "./RecentlyClosed";
 import { Background } from "./Background";
 import { Clocks } from "./Clocks";
+import { Highlights } from "./Highlights";
 import { Notes } from "./Notes";
 import { Weather } from "./Weather";
 import { SearchBox, type SearchHandle } from "./SearchBox";
@@ -188,12 +189,15 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
                 </div>
               )}
             </div>
-            {(data.settings.showWeather || data.settings.showNotes) && (
+            {(data.settings.showWeather ||
+              data.settings.showNotes ||
+              data.settings.showHighlights) && (
               <aside className="tools" data-empty-space="true">
                 {data.settings.showWeather && (
                   <Weather settings={data.settings} apply={guardedApply} />
                 )}
                 {data.settings.showNotes && <Notes />}
+                {data.settings.showHighlights && <Highlights settings={data.settings} />}
               </aside>
             )}
           </div>

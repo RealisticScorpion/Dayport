@@ -50,6 +50,8 @@ export const SettingsSchema = z.object({
   bgUrls: z.array(z.string().url().startsWith("https://")).max(500),
   /** Endpoint for the "json" source; empty when unset. */
   bgJsonUrl: z.union([z.literal(""), z.string().url().startsWith("https://")]),
+  showHighlights: z.boolean(),
+  highlightRotate: z.enum(["open", "daily"]),
 });
 
 export const DataSchema = z.object({
@@ -85,6 +87,8 @@ export const DEFAULT_SETTINGS: Settings = {
   bgVeil: 0.86,
   bgUrls: [],
   bgJsonUrl: "",
+  showHighlights: true,
+  highlightRotate: "daily",
 };
 
 export function emptyData(now = Date.now()): DayportData {

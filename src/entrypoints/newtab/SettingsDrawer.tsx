@@ -79,6 +79,14 @@ export function SettingsDrawer({
         ["json", t("bgJson")],
       ],
     } satisfies Choice<"bgSource">,
+    {
+      key: "highlightRotate",
+      label: "highlightRotate",
+      options: [
+        ["open", t("rotOpen")],
+        ["daily", t("rotDaily")],
+      ],
+    } satisfies Choice<"highlightRotate">,
   ];
 
   return (
@@ -164,6 +172,7 @@ export function SettingsDrawer({
             ["showClosed", "recentlyClosed"],
             ["showWeather", "weather"],
             ["showNotes", "notes"],
+            ["showHighlights", "highlights"],
           ] as const
         ).map(([key, label]) => (
           <label className="check" key={key}>
