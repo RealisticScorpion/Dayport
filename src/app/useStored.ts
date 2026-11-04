@@ -8,12 +8,22 @@ import { loadKey, mutateKey, watchKey, type Codec } from "../data/storage";
  */
 export function useStored<T>(key: string, codec: Codec<T>) {
   const [value, setValue] = useState<T | null>(null);
+  // Distinguishes "still loading" from a stored value that is itself null.
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     loadKey(key).then(
-      (raw) => !cancelled && setValue(codec.read(raw)),
-      () => !cancelled && setValue(codec.read(undefined)),
+      (raw) => {
+        if (cancelled) return;
+        setValue(codec.read(raw));
+        setLoaded(true);
+      },
+      () => {
+        if (cancelled) return;
+        setValue(codec.read(undefined));
+        setLoaded(true);
+      },
     );
     const stop = watchKey(key, (raw) => setValue(codec.read(raw)));
     return () => {
@@ -35,5 +45,5 @@ export function useStored<T>(key: string, codec: Codec<T>) {
     [key, codec],
   );
 
-  return { value, update };
+  return { value, loaded, update };
 }

@@ -389,7 +389,7 @@ function ResetCard({ apply, unreadable }: { apply: DayportStore["apply"]; unread
 async function clearCollections(): Promise<void> {
   const { browser } = await import("wxt/browser");
   await browser.storage.local
-    .remove([KEYS.later, KEYS.discovery, KEYS.note])
+    .remove([KEYS.later, KEYS.discovery, KEYS.note, KEYS.weather])
     .catch(() => undefined);
 }
 

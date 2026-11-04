@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { WeatherCitySchema } from "./weather";
 
 /** Version of the persisted document. Bump it and add a migration in migrate.ts. */
 export const SCHEMA_VERSION = 1;
@@ -38,7 +39,10 @@ export const SettingsSchema = z.object({
   showLater: z.boolean(),
   showClosed: z.boolean(),
   showNotes: z.boolean(),
+  showWeather: z.boolean(),
   clocks: z.array(ClockSchema).max(8),
+  weatherCity: WeatherCitySchema.nullable(),
+  weatherUnit: z.enum(["c", "f"]),
 });
 
 export const DataSchema = z.object({
@@ -65,7 +69,10 @@ export const DEFAULT_SETTINGS: Settings = {
   showLater: true,
   showClosed: true,
   showNotes: true,
+  showWeather: true,
   clocks: [],
+  weatherCity: null,
+  weatherUnit: "c",
 };
 
 export function emptyData(now = Date.now()): DayportData {

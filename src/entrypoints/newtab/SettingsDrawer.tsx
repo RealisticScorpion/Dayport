@@ -59,6 +59,14 @@ export function SettingsDrawer({
         ["en", "English"],
       ],
     } satisfies Choice<"language">,
+    {
+      key: "weatherUnit",
+      label: "temperatureUnit",
+      options: [
+        ["c", "°C"],
+        ["f", "°F"],
+      ],
+    } satisfies Choice<"weatherUnit">,
   ];
 
   return (
@@ -101,6 +109,7 @@ export function SettingsDrawer({
             ["showFrequent", "frequent"],
             ["showLater", "continueLater"],
             ["showClosed", "recentlyClosed"],
+            ["showWeather", "weather"],
             ["showNotes", "notes"],
           ] as const
         ).map(([key, label]) => (

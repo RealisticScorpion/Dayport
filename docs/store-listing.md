@@ -34,7 +34,7 @@ Source of truth for the Chrome Web Store submission. Update it with each release
 > • Back up and restore your links with a versioned file. Imports are previewed and validated before anything changes.
 > • English and Simplified Chinese.
 >
-> Private by design: your links and settings stay in this browser. Dayport has no account, no analytics, and no server, and it makes no network requests of its own. Site icons come from Chrome's local cache. Top sites, history, bookmarks, and recently closed tabs are read only after you turn each feature on, and never leave your device.
+> Private by design: your links and settings stay in this browser. Dayport has no account, no analytics, and no server. Its only network request is weather: once you choose a city, it sends that city's coordinates to Open-Meteo. Site icons come from Chrome's local cache. Top sites, history, bookmarks, and recently closed tabs are read only after you turn each feature on, and never leave your device.
 >
 > Open source under the MIT license: https://github.com/RealisticScorpion/Dayport
 
@@ -66,6 +66,7 @@ Source of truth for the Chrome Web Store submission. Update it with each release
   - `search` (from 0.3.0): Runs a web search with the user's default search engine when the user chooses web mode and presses Enter.
   - Optional, requested only when the user enables the feature (from 0.2.0): `topSites` (frequent pages), `history` (pages revisited on several days, analyzed on the device), `bookmarks` (bookmark folder import), `sessions` and `tabs` (recently closed tabs and the titles of tabs the user chooses to save).
   - New tab override (`chrome_url_overrides.newtab`): The extension's single purpose is the new tab page.
+- **Data usage (from 0.3.0):** Weather sends the coordinates of a city the user chose, and city searches, directly to Open-Meteo; Dayport's developer receives nothing. If the dashboard asks about location data, answer that the extension handles a user-chosen city location only to fetch weather from Open-Meteo, never sells or transfers it, and does not use it for any other purpose.
 - **Remote code:** No. All JavaScript, CSS, and fonts are bundled in the package.
 - **Data usage:** The extension does not collect or transmit any user data. Leave every data type unchecked and certify the three disclosures (not sold, not used for unrelated purposes, not used for creditworthiness).
 - **Privacy policy URL:** https://github.com/RealisticScorpion/Dayport/blob/main/docs/privacy.md

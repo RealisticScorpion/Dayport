@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: Milestones 1, 2, and 3a are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
+Status: Milestones 1, 2, and 3a, and weather from 3b, are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
 
 ## Target
 
@@ -54,6 +54,7 @@ Two smaller collections have their own keys, because the toolbar popup and the b
 "dayport-later":     { version: 1, items: { id, url, title, savedAt, batch }[] }   // tabs saved together share `batch`
 "dayport-discovery": { version: 1, dismissed: string[], excluded: string[] }      // urlKeys and domains
 "dayport-note":      { version: 1, text, updatedAt, writer }                       // one note; writer = page id
+"dayport-weather":   { version: 1, key, fetchedAt, conditions }                    // last forecast; key = rounded coordinates
 ```
 
 The note is saved whole, 600 ms after typing stops and when the page hides. A page ignores its own writes by `writer`; a write from another page replaces the text if this page has no unsaved typing, and otherwise shows "Load latest / Keep mine" and pauses autosave. Settings also hold up to 8 clocks as `{ id, zone, label }` with IANA zone names; offsets and dates come from `Intl`, never from stored offsets.
@@ -86,6 +87,7 @@ Every write to these keys re-reads storage and applies a pure edit (`mutateKey` 
 | Save the current tab  | `activeTab`, `contextMenus`           | Required, no install warning (implemented)                       |
 | Choose other tabs     | `chrome.tabs`                         | `tabs`, optional, requested from the popup (implemented)         |
 | Scheduled updates     | `chrome.alarms`                       | Add when scheduled work exists                                   |
+| Weather               | `fetch` to Open-Meteo                 | None: the API allows cross-origin requests (implemented)         |
 | Remote providers      | Origin-scoped host permissions        | Request only enabled provider origins                            |
 
 The table is a plan, not an existing manifest or a claim that all listed permissions are necessary. Keep permissions absent until the corresponding capability exists.

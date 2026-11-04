@@ -1032,6 +1032,67 @@ a.row:hover,
   gap: 8px;
 }
 
+/* Weather */
+.weather-now {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.weather-temp {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  line-height: 40px;
+  font-variant-numeric: tabular-nums;
+}
+.weather-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+}
+.weather-days {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 10px 0 0;
+  border-top: 1px solid var(--hairline);
+  list-style: none;
+}
+.weather-days li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  line-height: 16px;
+}
+.weather-day-cond {
+  color: var(--ink-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.weather-range {
+  font-variant-numeric: tabular-nums;
+}
+.weather-meta {
+  margin: 0;
+}
+.weather-meta a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--hairline);
+  text-underline-offset: 2px;
+}
+.weather-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 13px;
+  color: var(--danger);
+}
+
 /* First run */
 
 .first-run {

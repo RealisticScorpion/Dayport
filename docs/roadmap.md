@@ -44,7 +44,7 @@ Acceptance (automated in `e2e/tools.spec.ts` and `src/data/clocks.test.ts`): tim
 
 ### 3b: external services
 
-- [ ] Weather from Open-Meteo with manual city selection and cached results
+- [x] Weather from Open-Meteo with manual city selection and cached results (acceptance in `e2e/weather.spec.ts`)
 - [ ] Backgrounds from Unsplash Collections (user-supplied access key, attribution, download tracking), scheduled rotation, manual skip, and last-successful-image fallback
 - [ ] WeRead highlights: feasibility review of an official or user-controlled import path, then browsing and rotation
 

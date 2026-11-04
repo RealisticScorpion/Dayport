@@ -1,6 +1,8 @@
 # Privacy design
 
-Status: design intent plus the behavior of the current build (Milestones 1 and 2). This is not a certification. Dayport stores links, settings, tabs saved for later, and suggestion preferences in `chrome.storage.local`, bundles its fonts, and makes no network requests of its own; opening a saved link is ordinary navigation.
+Status: design intent plus the behavior of the current build (Milestones 1, 2, and 3a, and weather from 3b). This is not a certification. Dayport stores links, settings, tabs saved for later, suggestion preferences, the note, and cached weather in `chrome.storage.local`, and bundles its fonts; opening a saved link is ordinary navigation.
+
+The only network requests Dayport makes itself are for weather, and only after the user chooses a city. City search sends the typed name to `geocoding-api.open-meteo.com`; forecasts send the chosen city's latitude and longitude, rounded to two decimals, to `api.open-meteo.com`. Requests carry no cookies and no referrer, and nothing else is attached. Open-Meteo, like any server, receives network metadata such as the IP address. Turning off Weather under Sections in settings stops further requests; Reset on the options page clears the cached result. Because Open-Meteo allows cross-origin requests, no host permission is requested.
 
 Required permissions are `storage`, `favicon`, `activeTab` (the toolbar button and page menu save the tab they were used on), `contextMenus`, and `search` (web mode sends the typed text to the user's default search engine, only when the user presses Enter). In ChatGPT and Claude modes, Dayport copies the draft to the clipboard and opens the service's start page; the draft is not put in the URL and nothing else is added. Top sites, history, bookmarks, sessions, and tabs are optional: each is requested only when the user enables the feature that needs it, read on this device only, and can be revoked on the options page. History is analyzed in the page to find recurring visits; neither raw history nor the analysis is stored. Revoking a permission stops future reads; links already pinned or saved for later stay until the user removes them.
 
@@ -13,7 +15,7 @@ Planned storage includes navigation links, settings, notes, personal reading hig
 | Enabled feature    | Data that may leave the browser                                               | Intended recipient                                      |
 | ------------------ | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
 | Remote backgrounds | Image/endpoint request, network metadata, and any configured query parameters | The selected image provider                             |
-| Weather            | Selected city coordinates and network metadata                                | The selected weather provider                           |
+| Weather            | Typed city searches, the chosen city's rounded coordinates, network metadata  | Open-Meteo (implemented)                                |
 | Web search         | The search text after explicit submission                                     | The selected search engine                              |
 | AI launchpad       | Pasted question text when the user submits it in the external service         | ChatGPT, Claude, or another explicitly selected service |
 | Future API chat    | The explicitly submitted prompt and selected context                          | The configured API provider                             |
