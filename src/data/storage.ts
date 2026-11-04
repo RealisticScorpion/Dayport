@@ -13,6 +13,8 @@ export const KEYS = {
   discovery: "dayport-discovery",
   note: "dayport-note",
   weather: "dayport-weather",
+  background: "dayport-background",
+  weread: "dayport-weread",
 } as const;
 
 export async function loadKey(key: string): Promise<unknown> {

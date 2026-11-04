@@ -63,6 +63,7 @@ Source of truth for the Chrome Web Store submission. Update it with each release
   - `favicon`: Shows each saved site's icon from Chrome's local favicon cache instead of requesting icons from a remote service.
   - `activeTab` (from 0.2.0): Lets the toolbar button and the "Continue later" page menu read the address and title of the tab they were used on, so the user can save it.
   - `contextMenus` (from 0.2.0): Adds the "Continue later" item to the page context menu.
+  - Optional host permission `https://*/*` (from 0.3.0): never granted at install. When the user adds a background JSON source or connects WeRead, Dayport requests access to that single origin only, so it can read the image list or the user's own highlights.
   - `search` (from 0.3.0): Runs a web search with the user's default search engine when the user chooses web mode and presses Enter.
   - Optional, requested only when the user enables the feature (from 0.2.0): `topSites` (frequent pages), `history` (pages revisited on several days, analyzed on the device), `bookmarks` (bookmark folder import), `sessions` and `tabs` (recently closed tabs and the titles of tabs the user chooses to save).
   - New tab override (`chrome_url_overrides.newtab`): The extension's single purpose is the new tab page.

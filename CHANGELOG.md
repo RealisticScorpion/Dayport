@@ -9,6 +9,7 @@ Notable project changes will be recorded here.
 - World clocks: up to 8 cities, four shown at the top right; a comparison popover lines cities up on a 24-hour strip, with UTC offsets for the chosen date and "Tomorrow" / "Yesterday" labels. Daylight saving follows the browser's time-zone data.
 - One autosaved note in a tool column, with an expanded editor, Markdown export, and a "Load latest / Keep mine" prompt when another tab changed it. Notes can be included in backups.
 - Weather from Open-Meteo for one chosen city: current conditions, feels-like temperature, rain chance, and a four-day forecast, in °C or °F. Results are cached; a refresh runs after 30 minutes, a failed refresh keeps the last result marked "Cached", and nothing is requested until a city is chosen.
+- Background images from local files (kept in IndexedDB, with a focal point per image), a list of image links, or a [JSON source](docs/background-source.md). Rotation on each tab, hourly, daily, or manually; a corner control shows credit, Skip, and Pause. Broken images fall through to the next, and the last image that loaded stays as a fallback. Text sits on adjustable veils that keep secondary text at 4.5:1 contrast.
 - Search modes: saved links, web (Chrome's default engine), ChatGPT, and Claude, switched with Alt+1 to Alt+4. AI modes copy a multi-line draft and open the service; no saved link match lets Enter search the web.
 
 ### Changed

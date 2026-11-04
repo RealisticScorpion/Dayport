@@ -16,6 +16,7 @@ import { mergeNoteText, noteCodec } from "../../data/note";
 import { emptyData, type DayportData } from "../../data/schema";
 import { KEYS, mutateKey } from "../../data/storage";
 import { useStored } from "../../app/useStored";
+import { BackgroundCard } from "./BackgroundCard";
 import { BookmarksCard, ExcludedCard, PermissionsCard } from "./Discovery";
 
 export function Options() {
@@ -45,6 +46,7 @@ export function Options() {
             <ExportCard data={store.data} noteText={noteText} />
             <ImportCard data={store.data} apply={store.apply} noteText={noteText} />
             <BookmarksCard data={store.data} apply={store.apply} />
+            <BackgroundCard settings={store.data.settings} apply={store.apply} />
           </>
         )}
         <PermissionsCard />
@@ -389,8 +391,10 @@ function ResetCard({ apply, unreadable }: { apply: DayportStore["apply"]; unread
 async function clearCollections(): Promise<void> {
   const { browser } = await import("wxt/browser");
   await browser.storage.local
-    .remove([KEYS.later, KEYS.discovery, KEYS.note, KEYS.weather])
+    .remove([KEYS.later, KEYS.discovery, KEYS.note, KEYS.weather, KEYS.background])
     .catch(() => undefined);
+  const { clearImages } = await import("../../app/imageStore");
+  await clearImages().catch(() => undefined);
 }
 
 async function resetStorage(): Promise<boolean> {

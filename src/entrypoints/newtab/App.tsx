@@ -13,6 +13,7 @@ import { ContinueLater } from "./ContinueLater";
 import { Frequent } from "./Frequent";
 import { Navigation } from "./Navigation";
 import { RecentlyClosed } from "./RecentlyClosed";
+import { Background } from "./Background";
 import { Clocks } from "./Clocks";
 import { Notes } from "./Notes";
 import { Weather } from "./Weather";
@@ -103,6 +104,7 @@ function NewTab({ store, t, locale }: { store: DayportStore; t: Translate; local
 
   return (
     <div className="page" data-empty-space="true" onMouseDown={onBackgroundMouseDown}>
+      {settings && <Background settings={settings} onOpenSettings={() => setSettingsOpen(true)} />}
       <div className="container" data-empty-space="true">
         <header className="masthead" data-empty-space="true">
           <h1 className="date">{dateText}</h1>

@@ -1,6 +1,6 @@
 # Proposed architecture
 
-Status: Milestones 1, 2, and 3a, and weather from 3b, are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
+Status: Milestones 1, 2, and 3a, and weather and backgrounds from 3b, are implemented as described below. Later sections remain a proposal where they describe features that do not exist yet.
 
 ## Target
 
@@ -55,7 +55,10 @@ Two smaller collections have their own keys, because the toolbar popup and the b
 "dayport-discovery": { version: 1, dismissed: string[], excluded: string[] }      // urlKeys and domains
 "dayport-note":      { version: 1, text, updatedAt, writer }                       // one note; writer = page id
 "dayport-weather":   { version: 1, key, fetchedAt, conditions }                    // last forecast; key = rounded coordinates
+"dayport-background": { version: 1, sourceKey, index, shownAt, paused, lastGood, jsonImages }
 ```
+
+Local background images are blobs in IndexedDB (database `dayport`, store `images`, with a focal point per image) and are announced to other pages over a `BroadcastChannel`. They are not part of backups. Rotation is decided once per page open from elapsed time (`advance` in `src/data/background.ts`); a broken image falls through to the next few, and the last image that loaded stays underneath while a new one loads.
 
 The note is saved whole, 600 ms after typing stops and when the page hides. A page ignores its own writes by `writer`; a write from another page replaces the text if this page has no unsaved typing, and otherwise shows "Load latest / Keep mine" and pauses autosave. Settings also hold up to 8 clocks as `{ id, zone, label }` with IANA zone names; offsets and dates come from `Intl`, never from stored offsets.
 
@@ -74,21 +77,22 @@ Every write to these keys re-reads storage and applies a pure edit (`mutateKey` 
 
 ## Browser API boundaries
 
-| Capability            | Candidate API                         | Permission strategy                                              |
-| --------------------- | ------------------------------------- | ---------------------------------------------------------------- |
-| New tab replacement   | `chrome_url_overrides.newtab`         | Declare the bundled extension page                               |
-| Persistent settings   | `chrome.storage`                      | `storage`, required (implemented)                                |
-| Site icons            | `chrome://favicon` cache (`_favicon`) | `favicon`, required (implemented); no remote requests            |
-| Web search            | `chrome.search`                       | `search`, required, no install warning (implemented)             |
-| Frequent destinations | `chrome.topSites`                     | `topSites`, optional, requested by Enable (implemented)          |
-| Enhanced discovery    | `chrome.history`                      | `history`, optional, requested separately (implemented)          |
-| Bookmark import       | `chrome.bookmarks`                    | `bookmarks`, optional, requested on import (implemented)         |
-| Recently closed       | `chrome.sessions`                     | `sessions` + `tabs`, optional, requested by Enable (implemented) |
-| Save the current tab  | `activeTab`, `contextMenus`           | Required, no install warning (implemented)                       |
-| Choose other tabs     | `chrome.tabs`                         | `tabs`, optional, requested from the popup (implemented)         |
-| Scheduled updates     | `chrome.alarms`                       | Add when scheduled work exists                                   |
-| Weather               | `fetch` to Open-Meteo                 | None: the API allows cross-origin requests (implemented)         |
-| Remote providers      | Origin-scoped host permissions        | Request only enabled provider origins                            |
+| Capability             | Candidate API                         | Permission strategy                                                                  |
+| ---------------------- | ------------------------------------- | ------------------------------------------------------------------------------------ |
+| New tab replacement    | `chrome_url_overrides.newtab`         | Declare the bundled extension page                                                   |
+| Persistent settings    | `chrome.storage`                      | `storage`, required (implemented)                                                    |
+| Site icons             | `chrome://favicon` cache (`_favicon`) | `favicon`, required (implemented); no remote requests                                |
+| Web search             | `chrome.search`                       | `search`, required, no install warning (implemented)                                 |
+| Frequent destinations  | `chrome.topSites`                     | `topSites`, optional, requested by Enable (implemented)                              |
+| Enhanced discovery     | `chrome.history`                      | `history`, optional, requested separately (implemented)                              |
+| Bookmark import        | `chrome.bookmarks`                    | `bookmarks`, optional, requested on import (implemented)                             |
+| Recently closed        | `chrome.sessions`                     | `sessions` + `tabs`, optional, requested by Enable (implemented)                     |
+| Save the current tab   | `activeTab`, `contextMenus`           | Required, no install warning (implemented)                                           |
+| Choose other tabs      | `chrome.tabs`                         | `tabs`, optional, requested from the popup (implemented)                             |
+| Scheduled updates      | `chrome.alarms`                       | Add when scheduled work exists                                                       |
+| Weather                | `fetch` to Open-Meteo                 | None: the API allows cross-origin requests (implemented)                             |
+| Background JSON source | Optional host permission, one origin  | `https://*/*` declared optional; only the source's origin is requested (implemented) |
+| Remote providers       | Origin-scoped host permissions        | Request only enabled provider origins                                                |
 
 The table is a plan, not an existing manifest or a claim that all listed permissions are necessary. Keep permissions absent until the corresponding capability exists.
 

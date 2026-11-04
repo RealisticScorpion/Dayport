@@ -43,6 +43,13 @@ export const SettingsSchema = z.object({
   clocks: z.array(ClockSchema).max(8),
   weatherCity: WeatherCitySchema.nullable(),
   weatherUnit: z.enum(["c", "f"]),
+  bgSource: z.enum(["off", "local", "urls", "json"]),
+  bgRotate: z.enum(["open", "hourly", "daily", "manual"]),
+  bgVeil: z.number().min(0).max(1),
+  /** https image URLs for the "urls" source. */
+  bgUrls: z.array(z.string().url().startsWith("https://")).max(500),
+  /** Endpoint for the "json" source; empty when unset. */
+  bgJsonUrl: z.union([z.literal(""), z.string().url().startsWith("https://")]),
 });
 
 export const DataSchema = z.object({
@@ -73,6 +80,11 @@ export const DEFAULT_SETTINGS: Settings = {
   clocks: [],
   weatherCity: null,
   weatherUnit: "c",
+  bgSource: "off",
+  bgRotate: "daily",
+  bgVeil: 0.86,
+  bgUrls: [],
+  bgJsonUrl: "",
 };
 
 export function emptyData(now = Date.now()): DayportData {

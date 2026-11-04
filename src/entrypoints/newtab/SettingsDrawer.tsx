@@ -1,6 +1,8 @@
 import { browser } from "wxt/browser";
 import { useI18n, type MessageKey } from "../../app/i18n";
 import { Drawer } from "../../app/Drawer";
+import { VEIL_MAX, VEIL_MIN, veilOpacity } from "../../data/background";
+import { openBackgroundOptions } from "./Background";
 import { ClockSettings } from "./ClockSettings";
 import type { DayportStore } from "../../app/useDayport";
 import { updateSettings } from "../../data/ops";
@@ -67,6 +69,16 @@ export function SettingsDrawer({
         ["f", "°F"],
       ],
     } satisfies Choice<"weatherUnit">,
+    {
+      key: "bgSource",
+      label: "background",
+      options: [
+        ["off", t("bgOff")],
+        ["local", t("bgLocal")],
+        ["urls", t("bgUrls")],
+        ["json", t("bgJson")],
+      ],
+    } satisfies Choice<"bgSource">,
   ];
 
   return (
@@ -90,6 +102,47 @@ export function SettingsDrawer({
             </div>
           </div>
         ))}
+        {settings.bgSource !== "off" && (
+          <>
+            <div className="setting-row">
+              <span id="setting-bgRotate">{t("bgRotate")}</span>
+              <div className="segmented" role="group" aria-labelledby="setting-bgRotate">
+                {(
+                  [
+                    ["open", t("rotOpen")],
+                    ["hourly", t("rotHourly")],
+                    ["daily", t("rotDaily")],
+                    ["manual", t("rotManual")],
+                  ] as const
+                ).map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={settings.bgRotate === value}
+                    onClick={() => set({ bgRotate: value })}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <label className="setting-row">
+              <span>{t("bgVeil")}</span>
+              <input
+                type="range"
+                className="range"
+                min={VEIL_MIN}
+                max={VEIL_MAX}
+                step={0.01}
+                value={veilOpacity(settings.bgVeil)}
+                onChange={(event) => set({ bgVeil: Number(event.target.value) })}
+              />
+            </label>
+            <button type="button" className="link-button" onClick={openBackgroundOptions}>
+              {t("bgManage")}
+            </button>
+          </>
+        )}
         <label className="check">
           <input
             type="checkbox"

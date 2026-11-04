@@ -45,7 +45,7 @@ Acceptance (automated in `e2e/tools.spec.ts` and `src/data/clocks.test.ts`): tim
 ### 3b: external services
 
 - [x] Weather from Open-Meteo with manual city selection and cached results (acceptance in `e2e/weather.spec.ts`)
-- [ ] Backgrounds from Unsplash Collections (user-supplied access key, attribution, download tracking), scheduled rotation, manual skip, and last-successful-image fallback
+- [x] Backgrounds from local images, image link lists, and a [documented JSON source](background-source.md), with scheduled rotation, skip, pause, focal points, and last-successful-image fallback (acceptance in `e2e/background.spec.ts`). Unsplash was dropped: its API guidelines rule out wallpaper-style apps and keys held by end users.
 - [ ] WeRead highlights: feasibility review of an official or user-controlled import path, then browsing and rotation
 
 Acceptance: cached content works offline; failed provider requests do not block navigation; invalid highlight imports preserve existing data.

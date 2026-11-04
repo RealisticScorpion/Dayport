@@ -77,7 +77,7 @@ Time-of-day tint (optional, on by default in light theme) changes only `ground`:
 
 ### Backgrounds
 
-Background images are off by default; the default ground is the tinted solid color. When an image is enabled, text never sits directly on it. The masthead gets an automatic scrim, and the search field, navigation, and tools sit on a `surface` veil at 86% opacity with a 24 px backdrop blur. A veil-strength control lets users trade image visibility for readability; its minimum must still meet 4.5:1 for `ink-muted`.
+Background images are off by default; the default ground is the tinted solid color. When an image is enabled, text never sits directly on it. The masthead gets an automatic scrim, and the search field, navigation, and tools sit on a `surface` veil at 86% opacity with a 24 px backdrop blur. A veil-strength control lets users trade image visibility for readability; its minimum must still meet 4.5:1 for `ink-muted`. The implemented range is 85–95%: at 85%, `ink-muted` measures 5.2:1 over a black image in light mode and 4.7:1 over a white image in dark mode. `ink-faint` cannot reach 4.5:1 on any usable veil, so meta text switches to `ink-muted` while a background shows.
 
 ### Empty and degraded states
 

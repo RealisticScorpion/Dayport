@@ -1093,6 +1093,109 @@ a.row:hover,
   color: var(--danger);
 }
 
+/* Background image (docs/design.md, Backgrounds): text sits on veils only. */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.bg-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.bg-image + .bg-image {
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+.bg-image + .bg-image.shown {
+  opacity: 1;
+}
+:root[data-bg="on"] .bg-layer::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 240px;
+  background: linear-gradient(
+    color-mix(in srgb, var(--ground) calc(var(--veil) * 100%), transparent),
+    transparent
+  );
+}
+.page {
+  position: relative;
+}
+.container,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+:root[data-bg="on"] {
+  /* The faintest ink can't reach 4.5:1 on a veil, so meta text uses ink-muted. */
+  --ink-faint: var(--ink-muted);
+}
+:root[data-bg="on"] .navigation,
+:root[data-bg="on"] .auto-sections,
+:root[data-bg="on"] .first-run,
+:root[data-bg="on"] .tool,
+:root[data-bg="on"] .footer > * {
+  background: color-mix(in srgb, var(--surface) calc(var(--veil) * 100%), transparent);
+  backdrop-filter: blur(24px);
+  border-radius: 12px;
+}
+:root[data-bg="on"] .navigation,
+:root[data-bg="on"] .auto-sections,
+:root[data-bg="on"] .first-run,
+:root[data-bg="on"] .tool {
+  padding: 16px 20px;
+}
+:root[data-bg="on"] .auto-sections {
+  border-top: 0;
+}
+:root[data-bg="on"] .footer > * {
+  padding: 4px 10px;
+}
+:root[data-bg="on"] .masthead-end {
+  padding: 2px 4px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) calc(var(--veil) * 100%), transparent);
+  backdrop-filter: blur(24px);
+}
+.bg-control {
+  position: fixed;
+  z-index: 5;
+  right: 16px;
+  bottom: 56px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 4px 4px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 0 0 1px var(--hairline);
+  font-size: 12px;
+  color: var(--ink-muted);
+  opacity: 0;
+  transition: opacity 140ms ease-out;
+}
+.bg-control:hover,
+.bg-control:focus-within {
+  opacity: 1;
+}
+.bg-control a {
+  margin-right: 6px;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.range {
+  width: 160px;
+  accent-color: var(--accent);
+}
+
 /* First run */
 
 .first-run {

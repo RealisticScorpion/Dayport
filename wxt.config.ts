@@ -31,6 +31,10 @@ export default defineConfig({
       ...(e2e ? optionalPermissions : []),
     ],
     optional_permissions: e2e ? [] : [...optionalPermissions],
+    // A JSON background source or WeRead's gateway may not allow cross-origin
+    // requests, so the user grants that one origin when adding it.
+    optional_host_permissions: e2e ? [] : ["https://*/*"],
+    host_permissions: e2e ? ["https://*/*"] : [],
     icons: {
       16: "icon/16.png",
       32: "icon/32.png",
